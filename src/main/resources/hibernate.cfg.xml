@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <!-- Configurazione della connessione a MySQL -->
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/labyrinthshiftchat?useSSL=false&amp;serverTimezone=UTC</property>
+        <property name="hibernate.connection.username">root</property> <!-- Cambia con il tuo username -->
+        <property name="hibernate.connection.password">password</property> <!-- Cambia con la tua password -->
+        <property name="hibernate.cache.use_second_level_cache">false</property>
+
+        <!-- Dialect specifico per MySQL -->
+       <!-- <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>-->
+
+        <!-- Strategie per la creazione delle tabelle -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Debug delle query SQL -->
+        <property name="hibernate.show_sql">false</property>
+        <property name="hibernate.format_sql">false</property>
+
+        <!-- Pool di connessioni -->
+        <property name="hibernate.c3p0.min_size">5</property>
+        <property name="hibernate.c3p0.max_size">20</property>
+        <property name="hibernate.c3p0.timeout">300</property>
+        <property name="hibernate.c3p0.max_statements">50</property>
+
+        <!-- Mappatura delle entità -->
+        <mapping class="org.example.model.Player"/>
+        <mapping class="org.example.model.Maze"/>
+        <mapping class="org.example.model.Tile"/>
+        <mapping class="org.example.model.Obstacle"/>
+        <mapping class="org.example.model.Enemy"/>
+        <mapping class="org.example.model.GameSession"/>
+        <mapping class="org.example.model.DifficultyLevel"/>
+        <mapping class="org.example.model.MiniMaze"/>
+        <mapping class="org.example.model.Corridor"/>
+        <mapping class="org.example.model.Wall"/>
+        <mapping class="org.example.model.ExitTile"/>
+        <mapping class="org.example.model.StartTile"/>
+
+    </session-factory>
+</hibernate-configuration>
