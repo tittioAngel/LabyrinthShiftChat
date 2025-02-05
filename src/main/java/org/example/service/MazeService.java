@@ -1,14 +1,16 @@
 package org.example.service;
 
+import org.example.dao.EnemyDAO;
 import org.example.dao.MazeDAO;
+import org.example.dao.ObstacleDAO;
 import org.example.dao.TileDAO;
 import org.example.model.*;
-import org.example.model.tiles.Corridor;
-import org.example.model.tiles.ExitTile;
-import org.example.model.tiles.StartTile;
-import org.example.model.tiles.Wall;
+import org.example.model.entities.*;
+import org.example.model.tiles.*;
 
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class MazeService {
     private final MazeDAO mazeDAO = new MazeDAO();
@@ -25,6 +27,9 @@ public class MazeService {
             tile.setMaze(maze);// Assicura che la tile sia collegata a un Maze già salvato
             tileDAO.merge(tile);
         }
+
+        // Aggiungiamo ostacoli ed enemy
+        addObstaclesAndEnemies(maze);
 
         System.out.println("✅ Minimaze di livello " + difficulty.name() + " generato con successo!");
         System.out.println("📍 Posizione di partenza: (0, 0)");
@@ -107,6 +112,77 @@ public class MazeService {
         }
     }
 
+    private void addObstaclesAndEnemies(Maze maze) {
+        TileDAO tileDAO = new TileDAO();
+        List<Tile> allTiles = tileDAO.findAllTilesByMaze(maze.getId());
+        // Seleziona solo i tile di tipo Corridor escludendo start ed exit
+        List<Tile> availableTiles = allTiles.stream()
+                .filter(tile -> tile instanceof Corridor)
+                .filter(tile -> !(tile instanceof StartTile) && !(tile instanceof ExitTile))
+                .collect(Collectors.toList());
+
+        Random random = new Random();
+        ObstacleDAO obstacleDAO = new ObstacleDAO();
+        EnemyDAO enemyDAO = new EnemyDAO();
+
+        // Generazione degli ostacoli
+        int obstacleCount = maze.getDifficulty().getObstacleCount();
+        for (int i = 0; i < obstacleCount && !availableTiles.isEmpty(); i++) {
+            int index = random.nextInt(availableTiles.size());
+            Tile tile = availableTiles.get(index);
+            // Seleziona casualmente uno dei 4 tipi di ostacolo
+            int obstacleType = random.nextInt(4);
+            Obstacle obstacle = null;
+            switch (obstacleType) {
+                case 0:
+                    obstacle = new Thorns(tile.getX(), tile.getY(), maze);
+                    break;
+                case 1:
+                    obstacle = new FreezingFog(tile.getX(), tile.getY(), maze);
+                    break;
+                case 2:
+                    obstacle = new Slime(tile.getX(), tile.getY(), maze);
+                    break;
+                case 3:
+                    obstacle = new TimeVortex(tile.getX(), tile.getY(), maze);
+                    break;
+            }
+            if (obstacle != null) {
+                obstacleDAO.save(obstacle);
+            }
+            // Rimuove il tile per non posizionare più elementi sulla stessa casella
+            availableTiles.remove(index);
+        }
+
+        // Per gli enemy, ripristiniamo la lista dei tile disponibili
+        availableTiles = allTiles.stream()
+                .filter(tile -> tile instanceof Corridor)
+                .filter(tile -> !(tile instanceof StartTile) && !(tile instanceof ExitTile))
+                .collect(Collectors.toList());
+
+        int enemyCount = maze.getDifficulty().getEnemyCount();
+        for (int i = 0; i < enemyCount && !availableTiles.isEmpty(); i++) {
+            int index = random.nextInt(availableTiles.size());
+            Tile tile = availableTiles.get(index);
+            int enemyType = random.nextInt(3);
+            Enemy enemy = null;
+            switch (enemyType) {
+                case 0:
+                    enemy = new PhantomHorse(tile.getX(), tile.getY(), maze);
+                    break;
+                case 1:
+                    enemy = new ShadowDemon(tile.getX(), tile.getY(), maze);
+                    break;
+                case 2:
+                    enemy = new IceCyclops(tile.getX(), tile.getY(), maze);
+                    break;
+            }
+            if (enemy != null) {
+                enemyDAO.save(enemy);
+            }
+            availableTiles.remove(index);
+        }
+    }
 
     // ✅ Metodo per controllare se la mossa è valida
     public boolean isValidMove(Maze maze, int x, int y) {
@@ -151,5 +227,39 @@ public class MazeService {
         }
 
         throw new IllegalStateException("Nessuna posizione di partenza trovata nel labirinto!");
+    }
+
+    /**
+     * Controlla se, nella posizione (x, y) del labirinto, sono presenti ostacoli ed enemy.
+     * Se presenti, ne attiva l'effetto sul giocatore passato come parametro.
+     */
+    public void checkTileEffects(Maze maze, int x, int y, Player player) {
+        ObstacleDAO obstacleDAO = new ObstacleDAO();
+        EnemyDAO enemyDAO = new EnemyDAO();
+
+        // Recupera tutti gli ostacoli associati al labirinto e filtra quelli che si trovano nella posizione (x, y)
+        List<Obstacle> obstacles = obstacleDAO.findAllObstaclesByMaze(maze.getId())
+                .stream()
+                .filter(o -> o.getX() == x && o.getY() == y)
+                .collect(Collectors.toList());
+
+        for (Obstacle obstacle : obstacles) {
+            if (!obstacle.isActivated()) {
+                obstacle.applyEffect(player);
+                obstacle.setActivated(true);
+                // Se necessario, si può aggiornare lo stato dell'ostacolo sul DB
+            }
+        }
+
+        // Recupera tutti gli enemy associati al labirinto e filtra quelli presenti in (x, y)
+        List<Enemy> enemies = enemyDAO.findAllEnemiesByMaze(maze.getId())
+                .stream()
+                .filter(e -> e.getX() == x && e.getY() == y)
+                .collect(Collectors.toList());
+
+        for (Enemy enemy : enemies) {
+            enemy.attack(player);
+            // Se necessario, si può decidere di rimuovere o marcare l'enemy dopo l'attacco
+        }
     }
 }

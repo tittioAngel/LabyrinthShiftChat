@@ -19,6 +19,8 @@ public class Maze {
 
     private int size;
 
+
+
     @Enumerated(EnumType.STRING)
     private DifficultyLevel difficulty;
 
@@ -57,5 +59,17 @@ public class Maze {
 
     public void setTiles(List<Tile> tiles) {
         this.tiles = tiles;
+    }
+
+    public DifficultyLevel getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(DifficultyLevel difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }

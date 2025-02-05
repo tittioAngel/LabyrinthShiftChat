@@ -41,6 +41,17 @@
         <mapping class="org.example.model.tiles.Wall"/>
         <mapping class="org.example.model.tiles.ExitTile"/>
         <mapping class="org.example.model.tiles.StartTile"/>
+        <mapping class="org.example.model.entities.Obstacle"/>
+        <mapping class="org.example.model.entities.Enemy"/>
+        <mapping class="org.example.model.entities.Thorns"/>
+        <mapping class="org.example.model.entities.FreezingFog"/>
+        <mapping class="org.example.model.entities.Slime"/>
+        <mapping class="org.example.model.entities.TimeVortex"/>
+        <mapping class="org.example.model.entities.PhantomHorse"/>
+        <mapping class="org.example.model.entities.ShadowDemon"/>
+        <mapping class="org.example.model.entities.IceCyclops"/>
+
+
 
     </session-factory>
 </hibernate-configuration>
