@@ -1,9 +1,13 @@
 package org.example.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "players", uniqueConstraints = {@UniqueConstraint(columnNames = "username")})
+@Getter
+@Setter
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,25 +23,5 @@ public class Player {
     public Player(String username) {
         this.username = username;
         this.score = 0;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 }
