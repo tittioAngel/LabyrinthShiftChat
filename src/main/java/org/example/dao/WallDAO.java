@@ -1,6 +1,6 @@
 package org.example.dao;
 
-import org.example.model.Wall;
+import org.example.model.tiles.Wall;
 import org.hibernate.Session;
 import org.example.config.HibernateUtil;
 

@@ -1,6 +1,8 @@
 package org.example.config;
 
 import org.example.model.*;
+import org.example.model.entities.Enemy;
+import org.example.model.entities.Obstacle;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 

@@ -3,6 +3,10 @@ package org.example.service;
 import org.example.dao.MazeDAO;
 import org.example.dao.TileDAO;
 import org.example.model.*;
+import org.example.model.tiles.Corridor;
+import org.example.model.tiles.ExitTile;
+import org.example.model.tiles.StartTile;
+import org.example.model.tiles.Wall;
 
 import java.util.List;
 

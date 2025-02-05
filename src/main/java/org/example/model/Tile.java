@@ -35,6 +35,13 @@ public abstract class Tile {
         this.maze = maze;
     }
 
+    // Nuovo costruttore aggiunto
+    public Tile(int x, int y, boolean isWalkable) {
+        this.x = x;
+        this.y = y;
+        this.isWalkable = isWalkable;
+    }
+
     public Long getId() {
         return id;
     }

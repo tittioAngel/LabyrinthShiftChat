@@ -1,6 +1,6 @@
 package org.example.dao;
 
-import org.example.model.Enemy;
+import org.example.model.entities.Enemy;
 import org.hibernate.Session;
 import org.example.config.HibernateUtil;
 

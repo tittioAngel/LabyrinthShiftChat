@@ -2,7 +2,7 @@ package org.example.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import org.example.model.Corridor;
+import org.example.model.tiles.Corridor;
 import org.example.model.Tile;
 import org.hibernate.Session;
 import org.example.config.HibernateUtil;

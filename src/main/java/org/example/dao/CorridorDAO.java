@@ -1,6 +1,6 @@
 package org.example.dao;
 
-import org.example.model.Corridor;
+import org.example.model.tiles.Corridor;
 import org.hibernate.Session;
 import org.example.config.HibernateUtil;
 

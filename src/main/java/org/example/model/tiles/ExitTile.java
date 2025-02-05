@@ -1,6 +1,8 @@
-package org.example.model;
+package org.example.model.tiles;
 
 import jakarta.persistence.*;
+import org.example.model.Maze;
+import org.example.model.Tile;
 
 @Entity
 @DiscriminatorValue("ExitTile")

@@ -5,6 +5,8 @@ import org.example.dao.PlayerDAO;
 import org.example.dao.MazeDAO;
 import org.example.dao.TileDAO;
 import org.example.model.*;
+import org.example.model.tiles.Corridor;
+import org.example.model.tiles.Wall;
 
 public class GameSessionService {
     private final GameSessionDAO gameSessionDAO = new GameSessionDAO();

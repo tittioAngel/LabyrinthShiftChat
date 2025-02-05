@@ -1,6 +1,6 @@
 package org.example.dao;
 
-import org.example.model.Obstacle;
+import org.example.model.entities.Obstacle;
 import org.hibernate.Session;
 import org.example.config.HibernateUtil;
 

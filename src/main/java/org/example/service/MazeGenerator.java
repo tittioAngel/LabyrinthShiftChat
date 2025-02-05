@@ -1,6 +1,10 @@
 package org.example.service;
 
 import org.example.model.*;
+import org.example.model.tiles.Corridor;
+import org.example.model.tiles.ExitTile;
+import org.example.model.tiles.StartTile;
+import org.example.model.tiles.Wall;
 
 import java.util.Random;
 import java.util.Stack;
