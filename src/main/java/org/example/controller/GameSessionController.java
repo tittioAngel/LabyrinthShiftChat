@@ -3,6 +3,7 @@ package org.example.controller;
 import org.example.model.*;
 import org.example.service.GameSessionService;
 import org.example.service.MazeService;
+import org.example.service.ScoringService;
 
 import java.util.Scanner;
 import java.util.Timer;
@@ -11,8 +12,8 @@ import java.util.TimerTask;
 public class GameSessionController {
     private final GameSessionService gameSessionService = new GameSessionService();
     private final MazeService mazeService = new MazeService();
+    private final ScoringService scoringService = new ScoringService();
     private boolean gameOver = false;
-
     private static final int TOTAL_MINIMAZES = 3;
 
     public void startNewGame() {
@@ -23,6 +24,8 @@ public class GameSessionController {
         String difficultyInput = scanner.nextLine().toUpperCase();
         DifficultyLevel difficulty = DifficultyLevel.valueOf(difficultyInput);
 
+
+        int totalStars=0;
         int minimazeCompleted = 0;
         //Entriamo in uno dei 3 minimaze
         while (minimazeCompleted < TOTAL_MINIMAZES) {
@@ -51,31 +54,42 @@ public class GameSessionController {
             System.out.println("⏳ Ora risolvi il minimaze con WASD! Hai " + 60 + " Secondi.");
 
             // Avvio del gameplay con movimento del giocatore
-                completed = movePlayer(scanner, maze, playerX, playerY, difficulty);
+                int stars = movePlayer(scanner, maze, playerX, playerY, difficulty);
 
-            if (completed) {
+            if (stars>0) {
                 minimazeCompleted++;
-                System.out.println("🎉 Minimaze completato! Passi al successivo.");
+                totalStars+=stars;
+                System.out.println("🎉 Minimaze completato con " + stars + " stelle!");
+                completed = true;
             }else
                 System.out.println("❌ Tempo scaduto! Devi ricominciare il minimaze.");
             }
 
         }
+        double averageStars = totalStars / (double) TOTAL_MINIMAZES;
         System.out.println("\n🏆 **Complimenti! Hai completato tutti i minimaze del livello.** 🏆");
+        System.out.println("⭐ Punteggio finale medio: " + averageStars + " stelle.");
     }
 
 
 
-    private boolean movePlayer(Scanner scanner, Maze maze, int playerX, int playerY, DifficultyLevel difficulty) {
-        long timeLimit =60*1000; // Tempo limite in millisecondi
+    /**
+     * Gestisce il movimento del giocatore e calcola il punteggio in stelle in base al tempo di completamento.
+     * @return il numero di stelle ottenute se il minimaze è completato, altrimenti 0.
+     */
+
+    private int movePlayer(Scanner scanner, Maze maze, int playerX, int playerY, DifficultyLevel difficulty) {
+        long timeLimit =60*1000; // Tempo limite in secondi
         long startTime;
 
         while (true) {
             startTime = System.currentTimeMillis(); // 🔄 Resetta il timer a ogni rigenerazione
 
             while ((System.currentTimeMillis() - startTime) < timeLimit) {
+
                 // Mostra il labirinto con il giocatore segnato come 'G'
                 mazeService.displayLimitedView(maze, playerX, playerY);
+
                 long remainingTime = (timeLimit - (System.currentTimeMillis() - startTime)) / 1000;
                 System.out.println("\n⏳ Tempo rimasto: " + remainingTime + " secondi.");
                 System.out.print("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire): ");
@@ -83,7 +97,7 @@ public class GameSessionController {
 
                 if (input.equals("Q")) {
                     System.out.println("❌ Hai abbandonato la partita.");
-                    return false;
+                    return 0;
                 }
 
                 int newX = playerX, newY = playerY;
@@ -102,9 +116,17 @@ public class GameSessionController {
                     playerY = newY;
                     System.out.println("✅ Ti sei mosso a: (" + playerX + ", " + playerY + ")");
 
+                    // qui andrebbe inserito il controllo su nemici ancora da fare
+
+
+
                     if (mazeService.isExit(maze, playerX, playerY)) {
+
+                        long elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000;
+                        int stars = scoringService.computeStars(elapsedSeconds);
                         System.out.println("🏁 Complimenti! Hai completato il minimaze!");
-                        return true;
+
+                        return stars;
                     }
                 } else {
                     System.out.println("⛔ Movimento non valido, c'è un muro o un ostacolo!");
@@ -113,7 +135,7 @@ public class GameSessionController {
 
             // 🔄 Se il tempo scade, resettiamo il minimaze
             System.out.println("⏰ Tempo scaduto! Generando un nuovo minimaze...");
-            return false;
+            return 0;
         }
     }
 
