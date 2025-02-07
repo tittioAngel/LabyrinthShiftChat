@@ -7,18 +7,19 @@ import org.example.model.Player;
 
 @Entity
 @DiscriminatorValue("Thorns")
-public class Thorns extends Obstacle {
+public class Thorns extends Adversity {
+
     public Thorns() {
         super();
     }
 
     public Thorns(int x, int y, Maze maze) {
-        super(x, y, maze);
+        super(x, y, maze, AdversityType.OBSTACLE);
     }
 
     @Override
-    public void applyEffect(Player player) {
+    public void triggerEffect(Player player) {
         System.out.println("Hai attivato le Spine! La tua velocità è ridotta del 50% per 5 secondi.");
-        // Inserire qui la logica per ridurre la velocità del giocatore.
+        // Logica per ridurre la velocità del giocatore
     }
 }

@@ -32,17 +32,16 @@
         <mapping class="org.example.model.Player"/>
         <mapping class="org.example.model.Maze"/>
         <mapping class="org.example.model.Tile"/>
-        <mapping class="org.example.model.entities.Obstacle"/>
-        <mapping class="org.example.model.entities.Enemy"/>
         <mapping class="org.example.model.GameSession"/>
         <mapping class="org.example.model.DifficultyLevel"/>
         <mapping class="org.example.model.MiniMaze"/>
+
         <mapping class="org.example.model.tiles.Corridor"/>
         <mapping class="org.example.model.tiles.Wall"/>
         <mapping class="org.example.model.tiles.ExitTile"/>
         <mapping class="org.example.model.tiles.StartTile"/>
-        <mapping class="org.example.model.entities.Obstacle"/>
-        <mapping class="org.example.model.entities.Enemy"/>
+
+        <mapping class="org.example.model.entities.Adversity" />
         <mapping class="org.example.model.entities.Thorns"/>
         <mapping class="org.example.model.entities.FreezingFog"/>
         <mapping class="org.example.model.entities.Slime"/>

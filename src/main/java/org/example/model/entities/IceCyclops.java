@@ -7,18 +7,19 @@ import org.example.model.Player;
 
 @Entity
 @DiscriminatorValue("IceCyclops")
-public class IceCyclops extends Enemy {
+public class IceCyclops extends Adversity {
+
     public IceCyclops() {
         super();
     }
 
     public IceCyclops(int x, int y, Maze maze) {
-        super(x, y, maze);
+        super(x, y, maze, AdversityType.ENEMY);
     }
 
     @Override
-    public void attack(Player player) {
+    public void triggerEffect(Player player) {
         System.out.println("Un Ice Cyclops genera Nebbia Gelida sulle caselle adiacenti, rallentando i tuoi movimenti.");
-        // Inserire qui la logica per applicare l'effetto di Freezing Fog sulle caselle adiacenti.
+        // Logica per applicare l'effetto simile a FreezingFog sulle caselle adiacenti
     }
 }

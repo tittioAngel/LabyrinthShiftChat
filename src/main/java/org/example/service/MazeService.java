@@ -1,9 +1,6 @@
 package org.example.service;
 
-import org.example.dao.EnemyDAO;
-import org.example.dao.MazeDAO;
-import org.example.dao.ObstacleDAO;
-import org.example.dao.TileDAO;
+import org.example.dao.*;
 import org.example.model.*;
 import org.example.model.entities.*;
 import org.example.model.tiles.*;
@@ -29,7 +26,7 @@ public class MazeService {
         }
 
         // Aggiungiamo ostacoli ed enemy
-        addObstaclesAndEnemies(maze);
+        addAdversities(maze);
 
         System.out.println("✅ Minimaze di livello " + difficulty.name() + " generato con successo!");
         System.out.println("📍 Posizione di partenza: (0, 0)");
@@ -112,49 +109,46 @@ public class MazeService {
         }
     }
 
-    private void addObstaclesAndEnemies(Maze maze) {
+    private void addAdversities(Maze maze) {
         TileDAO tileDAO = new TileDAO();
         List<Tile> allTiles = tileDAO.findAllTilesByMaze(maze.getId());
-        // Seleziona solo i tile di tipo Corridor escludendo start ed exit
+        // Selezioniamo solo i tile di tipo Corridor, escludendo start ed exit
         List<Tile> availableTiles = allTiles.stream()
                 .filter(tile -> tile instanceof Corridor)
                 .filter(tile -> !(tile instanceof StartTile) && !(tile instanceof ExitTile))
                 .collect(Collectors.toList());
 
         Random random = new Random();
-        ObstacleDAO obstacleDAO = new ObstacleDAO();
-        EnemyDAO enemyDAO = new EnemyDAO();
+        AdversityDAO adversityDAO = new AdversityDAO();
 
-        // Generazione degli ostacoli
+        // Posizionamento degli "ostacoli"
         int obstacleCount = maze.getDifficulty().getObstacleCount();
         for (int i = 0; i < obstacleCount && !availableTiles.isEmpty(); i++) {
             int index = random.nextInt(availableTiles.size());
             Tile tile = availableTiles.get(index);
-            // Seleziona casualmente uno dei 4 tipi di ostacolo
             int obstacleType = random.nextInt(4);
-            Obstacle obstacle = null;
+            Adversity adversity = null;
             switch (obstacleType) {
                 case 0:
-                    obstacle = new Thorns(tile.getX(), tile.getY(), maze);
+                    adversity = new Thorns(tile.getX(), tile.getY(), maze);
                     break;
                 case 1:
-                    obstacle = new FreezingFog(tile.getX(), tile.getY(), maze);
+                    adversity = new FreezingFog(tile.getX(), tile.getY(), maze);
                     break;
                 case 2:
-                    obstacle = new Slime(tile.getX(), tile.getY(), maze);
+                    adversity = new Slime(tile.getX(), tile.getY(), maze);
                     break;
                 case 3:
-                    obstacle = new TimeVortex(tile.getX(), tile.getY(), maze);
+                    adversity = new TimeVortex(tile.getX(), tile.getY(), maze);
                     break;
             }
-            if (obstacle != null) {
-                obstacleDAO.save(obstacle);
+            if (adversity != null) {
+                adversityDAO.save(adversity);
             }
-            // Rimuove il tile per non posizionare più elementi sulla stessa casella
             availableTiles.remove(index);
         }
 
-        // Per gli enemy, ripristiniamo la lista dei tile disponibili
+        // Ripristiniamo la lista dei tile disponibili per i nemici
         availableTiles = allTiles.stream()
                 .filter(tile -> tile instanceof Corridor)
                 .filter(tile -> !(tile instanceof StartTile) && !(tile instanceof ExitTile))
@@ -165,20 +159,20 @@ public class MazeService {
             int index = random.nextInt(availableTiles.size());
             Tile tile = availableTiles.get(index);
             int enemyType = random.nextInt(3);
-            Enemy enemy = null;
+            Adversity adversity = null;
             switch (enemyType) {
                 case 0:
-                    enemy = new PhantomHorse(tile.getX(), tile.getY(), maze);
+                    adversity = new PhantomHorse(tile.getX(), tile.getY(), maze);
                     break;
                 case 1:
-                    enemy = new ShadowDemon(tile.getX(), tile.getY(), maze);
+                    adversity = new ShadowDemon(tile.getX(), tile.getY(), maze);
                     break;
                 case 2:
-                    enemy = new IceCyclops(tile.getX(), tile.getY(), maze);
+                    adversity = new IceCyclops(tile.getX(), tile.getY(), maze);
                     break;
             }
-            if (enemy != null) {
-                enemyDAO.save(enemy);
+            if (adversity != null) {
+                adversityDAO.save(adversity);
             }
             availableTiles.remove(index);
         }
@@ -234,32 +228,18 @@ public class MazeService {
      * Se presenti, ne attiva l'effetto sul giocatore passato come parametro.
      */
     public void checkTileEffects(Maze maze, int x, int y, Player player) {
-        ObstacleDAO obstacleDAO = new ObstacleDAO();
-        EnemyDAO enemyDAO = new EnemyDAO();
-
-        // Recupera tutti gli ostacoli associati al labirinto e filtra quelli che si trovano nella posizione (x, y)
-        List<Obstacle> obstacles = obstacleDAO.findAllObstaclesByMaze(maze.getId())
+        AdversityDAO adversityDAO = new AdversityDAO();
+        List<Adversity> adversities = adversityDAO.findAllByMaze(maze.getId())
                 .stream()
-                .filter(o -> o.getX() == x && o.getY() == y)
+                .filter(a -> a.getX() == x && a.getY() == y)
                 .collect(Collectors.toList());
 
-        for (Obstacle obstacle : obstacles) {
-            if (!obstacle.isActivated()) {
-                obstacle.applyEffect(player);
-                obstacle.setActivated(true);
-                // Se necessario, si può aggiornare lo stato dell'ostacolo sul DB
+        for (Adversity adversity : adversities) {
+            if (!adversity.isActivated()) {
+                adversity.triggerEffect(player);
+                adversity.setActivated(true);
+                // Qui, eventualmente, si potrebbe aggiornare lo stato dell'Adversity nel database se necessario
             }
-        }
-
-        // Recupera tutti gli enemy associati al labirinto e filtra quelli presenti in (x, y)
-        List<Enemy> enemies = enemyDAO.findAllEnemiesByMaze(maze.getId())
-                .stream()
-                .filter(e -> e.getX() == x && e.getY() == y)
-                .collect(Collectors.toList());
-
-        for (Enemy enemy : enemies) {
-            enemy.attack(player);
-            // Se necessario, si può decidere di rimuovere o marcare l'enemy dopo l'attacco
         }
     }
 }

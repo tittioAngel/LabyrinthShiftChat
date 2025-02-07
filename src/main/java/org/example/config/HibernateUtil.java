@@ -1,8 +1,7 @@
 package org.example.config;
 
 import org.example.model.*;
-import org.example.model.entities.Enemy;
-import org.example.model.entities.Obstacle;
+import org.example.model.entities.Adversity;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -16,8 +15,7 @@ public class HibernateUtil {
                     .addAnnotatedClass(Player.class)
                     .addAnnotatedClass(Maze.class)
                     .addAnnotatedClass(Tile.class)
-                    .addAnnotatedClass(Obstacle.class)
-                    .addAnnotatedClass(Enemy.class)
+                    .addAnnotatedClass(Adversity.class)
                     .addAnnotatedClass(GameSession.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {

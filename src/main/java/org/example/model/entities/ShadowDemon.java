@@ -7,18 +7,19 @@ import org.example.model.Player;
 
 @Entity
 @DiscriminatorValue("ShadowDemon")
-public class ShadowDemon extends Enemy {
+public class ShadowDemon extends Adversity {
+
     public ShadowDemon() {
         super();
     }
 
     public ShadowDemon(int x, int y, Maze maze) {
-        super(x, y, maze);
+        super(x, y, maze, AdversityType.ENEMY);
     }
 
     @Override
-    public void attack(Player player) {
+    public void triggerEffect(Player player) {
         System.out.println("Uno Shadow Demon ti ha avvistato! Ti insegue per 7 secondi.");
-        // Inserire qui la logica per attivare l'inseguimento per 7 secondi.
+        // Logica per attivare un inseguimento di 7 secondi
     }
 }

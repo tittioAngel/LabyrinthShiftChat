@@ -7,18 +7,19 @@ import org.example.model.Player;
 
 @Entity
 @DiscriminatorValue("FreezingFog")
-public class FreezingFog extends Obstacle {
+public class FreezingFog extends Adversity {
+
     public FreezingFog() {
         super();
     }
 
     public FreezingFog(int x, int y, Maze maze) {
-        super(x, y, maze);
+        super(x, y, maze, AdversityType.OBSTACLE);
     }
 
     @Override
-    public void applyEffect(Player player) {
+    public void triggerEffect(Player player) {
         System.out.println("Hai attivato la Nebbia Gelida! La tua velocità è ridotta di un terzo per 7 secondi e la visibilità è limitata.");
-        // Inserire qui la logica per rallentare il giocatore e ridurre la visibilità.
+        // Logica per rallentare il giocatore e limitare la visibilità
     }
 }
