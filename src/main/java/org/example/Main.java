@@ -1,13 +1,13 @@
 package org.example;
 
-import org.example.controller.GameSessionController;
+import org.example.controller.GameController;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("🎮 Benvenuto in LabyrinthShiftChat!");
 
-        // Avvio della partita con il GameSessionController
-        GameSessionController gameSessionController = new GameSessionController();
-        gameSessionController.startNewGame();
+        GameController gameController = new GameController();
+        gameController.startGame();
+        //GameSessionController gameSessionController = new GameSessionController();
+        //gameSessionController.startNewGame();
     }
 }

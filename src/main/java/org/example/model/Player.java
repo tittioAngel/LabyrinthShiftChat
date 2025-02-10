@@ -1,14 +1,18 @@
 package org.example.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "players", uniqueConstraints = {@UniqueConstraint(columnNames = "username")})
 @Getter
 @Setter
+@NoArgsConstructor
 public class Player {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,12 +20,11 @@ public class Player {
     @Column(nullable = false, unique = true)
     private String username;
 
-    private int score;
+    @Column(nullable = false)
+    private String password;
 
-    public Player() {} // Costruttore senza argomenti richiesto da Hibernate
-
-    public Player(String username) {
+    public Player(String username, String password) {
         this.username = username;
-        this.score = 0;
+        this.password = password;
     }
 }

@@ -13,7 +13,7 @@
         <property name="hibernate.cache.use_second_level_cache">false</property>
 
         <!-- Dialect specifico per MySQL -->
-       <!-- <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>-->
+       <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
         <!-- Strategie per la creazione delle tabelle -->
         <property name="hibernate.hbm2ddl.auto">update</property>
@@ -29,7 +29,8 @@
         <property name="hibernate.c3p0.max_statements">50</property>
 
         <!-- Mappatura delle entità -->
-        <mapping class="org.example.model.Player"/>
+        <mapping class="org.example.model.Profile"/>
+        <mapping class="org.example.model.CompletedLevel"/>
         <mapping class="org.example.model.Maze"/>
         <mapping class="org.example.model.Tile"/>
         <mapping class="org.example.model.GameSession"/>

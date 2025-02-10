@@ -14,7 +14,6 @@ public class PlayerDAO {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            // ✅ Controlla se il giocatore esiste già per evitare la violazione della chiave unica
             Player existingPlayer = session.createQuery("FROM Player WHERE username = :username", Player.class)
                     .setParameter("username", player.getUsername())
                     .uniqueResult();
@@ -34,14 +33,12 @@ public class PlayerDAO {
         }
     }
 
-    // ✅ Metodo findById aggiunto
     public Player findById(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.get(Player.class, id);
         }
     }
 
-    // ✅ Metodo findAll aggiunto
     public List<Player> findAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("FROM Player", Player.class).list();
@@ -50,6 +47,14 @@ public class PlayerDAO {
     }
 
     public Player findByUsername(String username) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Player WHERE username = :username", Player.class)
+                    .setParameter("username", username)
+                    .uniqueResult();
+        }
+    }
+
+    public Player findByUsernameAndPassword(final String username, final String password) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("FROM Player WHERE username = :username", Player.class)
                     .setParameter("username", username)

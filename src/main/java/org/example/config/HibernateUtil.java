@@ -11,8 +11,10 @@ public class HibernateUtil {
     private static SessionFactory buildSessionFactory() {
         try {
             return new Configuration()
-                    .configure("hibernate.cfg.xml") // Carica la configurazione di base
+                    .configure("hibernate.cfg.xml")
                     .addAnnotatedClass(Player.class)
+                    .addAnnotatedClass(Profile.class)
+                    .addAnnotatedClass(Level.class)
                     .addAnnotatedClass(Maze.class)
                     .addAnnotatedClass(Tile.class)
                     .addAnnotatedClass(Adversity.class)
