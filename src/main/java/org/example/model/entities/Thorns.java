@@ -14,12 +14,12 @@ public class Thorns extends Adversity {
     }
 
     public Thorns(int x, int y, Maze maze) {
-        super(x, y, maze, AdversityType.OBSTACLE);
+        super(x, y, maze, AdversityType.OBSTACLE,5);
     }
 
     @Override
     public void triggerEffect(Player player) {
         System.out.println("Hai attivato le Spine! La tua velocità è ridotta del 50% per 5 secondi.");
-        // Logica per ridurre la velocità del giocatore
+        player.setSpeed(player.getSpeed()/2);
     }
 }

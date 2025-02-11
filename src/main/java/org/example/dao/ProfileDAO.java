@@ -3,6 +3,7 @@ package org.example.dao;
 import lombok.NoArgsConstructor;
 import org.example.config.HibernateUtil;
 import org.example.model.CompletedLevel;
+import org.example.model.Player;
 import org.example.model.Profile;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -55,6 +56,12 @@ public class ProfileDAO {
                             "WHERE profile.id = :profileId ", CompletedLevel.class)
                     .setParameter("profileId", profile.getId())
                     .getResultList();
+        }
+    }
+
+    public static Profile findById(Long id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Profile.class, id);
         }
     }
 }

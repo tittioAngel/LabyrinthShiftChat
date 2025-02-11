@@ -1,23 +1,26 @@
 package org.example.service;
 
-import org.example.dao.GameSessionDAO;
-import org.example.dao.PlayerDAO;
-import org.example.dao.MazeDAO;
-import org.example.dao.TileDAO;
+import org.example.dao.*;
 import org.example.model.*;
+import org.example.model.entities.Adversity;
 import org.example.model.tiles.Corridor;
 import org.example.model.tiles.Wall;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class GameSessionService {
     private final GameSessionDAO gameSessionDAO = new GameSessionDAO();
-    private final PlayerDAO playerDAO = new PlayerDAO();
+     private final Player player=new Player();
     private final MazeDAO mazeDAO = new MazeDAO();
     private final TileDAO tileDAO = new TileDAO();
 
-    public GameSession startGame(Long playerId, Long mazeId) {
-        Player player = playerDAO.findById(playerId);
+    public GameSession startGame(Long profileId, Long mazeId) {
+
+        //questa parte potrebbe essere inutile almeno per il profilo
+        Profile profile = ProfileDAO.findById(profileId);
         Maze maze = mazeDAO.findById(mazeId);
-        if (player == null || maze == null) {
+        if (profile == null || maze == null) {
             throw new RuntimeException("❌ Giocatore o labirinto non trovati.");
         }
         // Trova la posizione di partenza (es. primo corridoio disponibile)
@@ -27,14 +30,35 @@ public class GameSessionService {
         }
 
         // Crea una nuova sessione di gioco
-        GameSession gameSession = new GameSession(player, maze,startTile, 60);
+        GameSession gameSession = new GameSession(profile, maze,startTile, 60);
         gameSessionDAO.save(gameSession);
 
-        System.out.println("✅ Partita avviata per " + player.getUsername() + " nel labirinto di livello " + maze.getLevel());
+        System.out.println("✅ Partita avviata per " + profile.getUsername() + " nel labirinto di livello " + maze.getLevel());
         System.out.println("📍 Posizione iniziale: (" + startTile.getX() + ", " + startTile.getY() + ")");
         System.out.println("⏳ Tempo rimanente: 60 secondi.");
 
         return gameSession;
+    }
+
+
+    // verificare se il giocatore incontra un ostacolo o un nemico.
+    public void checkTileEffects(GameSession gameSession, Player player) {
+        Maze maze = gameSession.getMaze();
+        int playerX = player.getX();
+        int playerY = player.getY();
+
+        AdversityDAO adversityDAO = new AdversityDAO();
+        List<Adversity> adversities = adversityDAO.findAllByMaze(maze.getId())
+                .stream()
+                .filter(a -> a.getX() == playerX && a.getY() == playerY)
+                .collect(Collectors.toList());
+
+        for (Adversity adversity : adversities) {
+            if (!adversity.isActivated()) {
+                adversity.triggerEffect(player);
+                adversity.setActivated(true);
+            }
+        }
     }
 
     public void movePlayer(Long sessionId, String direction) {
@@ -82,5 +106,8 @@ public class GameSessionService {
         } else {
             System.out.println("❌ Movimento non valido.");
         }
+
+        // 🔥 Verifica se il giocatore incontra ostacoli o nemici
+        checkTileEffects(gameSession, new Player(newTile.getX(), newTile.getY()));
     }
 }

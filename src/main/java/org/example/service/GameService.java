@@ -2,7 +2,7 @@ package org.example.service;
 
 import lombok.NoArgsConstructor;
 import org.example.model.Profile;
-import org.example.singleton.SessionFactory;
+import org.example.singleton.GameSessionManager;
 import org.example.util.MenuUtil;
 
 import java.util.HashMap;
@@ -14,19 +14,19 @@ public class GameService {
     private final ProfileService profileService = new ProfileService();
     private final LevelService levelService = new LevelService();
 
-    private final SessionFactory sessionFactory = SessionFactory.getInstance();
+    private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
 
 
     public void gameStart() {
 
-        while (!sessionFactory.isLoggedIn()) {
+        while (!gameSessionManager.isLoggedIn()) {
             Profile profile = selectStartMenuOption(true);
             if (profile != null) {
-                sessionFactory.setProfile(profile);
+                gameSessionManager.setProfile(profile);
             }
         }
-        if (sessionFactory.isLoggedIn()) {
-            menuUtil.showUserProfile(sessionFactory.getProfile());
+        if (gameSessionManager.isLoggedIn()) {
+            menuUtil.showUserProfile(gameSessionManager.getProfile());
             manageModeSelected(menuUtil.showModeMenu());
         }
 
@@ -60,7 +60,7 @@ public class GameService {
     }
 
     public void stopGame() {
-        sessionFactory.logOut();
+        gameSessionManager.logOut();
         System.out.println("\n👋 Grazie per aver giocato! Alla prossima! 🎮");
         System.exit(0);
     }
@@ -68,7 +68,7 @@ public class GameService {
     public void manageModeSelected(int mode) {
         switch (mode) {
             case 1:
-                manageLevelSelected(menuUtil.showLevelsMenu(sessionFactory.getProfile()));
+                manageLevelSelected(menuUtil.showLevelsMenu(gameSessionManager.getProfile()));
                 break;
             case 2:
                 stopGame();
@@ -80,7 +80,7 @@ public class GameService {
     public void manageLevelSelected(int levelType) {
         switch (levelType) {
             case 1:
-                managePlayLevel(sessionFactory.getProfile().getCompletedLevels().size() + 1 );
+                managePlayLevel(gameSessionManager.getProfile().getCompletedLevels().size() + 1 );
         }
     }
 

@@ -14,12 +14,20 @@ public class ShadowDemon extends Adversity {
     }
 
     public ShadowDemon(int x, int y, Maze maze) {
-        super(x, y, maze, AdversityType.ENEMY);
+        super(x, y, maze, AdversityType.ENEMY,7);
     }
 
     @Override
     public void triggerEffect(Player player) {
-        System.out.println("Uno Shadow Demon ti ha avvistato! Ti insegue per 7 secondi.");
-        // Logica per attivare un inseguimento di 7 secondi
+        System.out.println("👹 Uno Shadow Demon ti ha avvistato! Ti insegue per " + getEffectDuration() + " secondi.");
+        for (int i = 0; i < getEffectDuration(); i++) {
+            int[] previousPos = player.getPreviousPosition(1);
+            player.setPosition(previousPos[0] + 1, previousPos[1]); // Si avvicina al giocatore
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 }

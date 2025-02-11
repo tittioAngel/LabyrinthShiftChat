@@ -14,12 +14,13 @@ public class PhantomHorse extends Adversity {
     }
 
     public PhantomHorse(int x, int y, Maze maze) {
-        super(x, y, maze, AdversityType.ENEMY);
+        super(x, y, maze, AdversityType.ENEMY,0);
     }
 
     @Override
     public void triggerEffect(Player player) {
         System.out.println("Un Phantom Horse ti ha colpito! Verrai spinto indietro di 4 tile.");
-        // Logica per spostare il giocatore indietro di 4 tile
+        int[] previousPos = player.getPreviousPosition(4);
+        player.setPosition(previousPos[0], previousPos[1]);
     }
 }

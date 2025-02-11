@@ -1,17 +1,24 @@
 package org.example.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 @Entity
 @Table(name = "game_sessions")
+@Getter
+@Setter
+@NoArgsConstructor
 public class GameSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "player_id", nullable = false)
-    private Player player;
+    @JoinColumn(name = "profile_id", nullable = false)
+    private Profile profile;
 
     @ManyToOne
     @JoinColumn(name = "maze_id", nullable = false)
@@ -23,21 +30,11 @@ public class GameSession {
 
     private int timeRemaining;
 
-    public GameSession() {}
-
-    public GameSession(Player player, Maze maze, Tile startTile, int timeRemaining) {
-        this.player = player;
+    public GameSession(Profile profile, Maze maze, Tile startTile, int timeRemaining) {
+        this.profile = profile;
         this.maze = maze;
         this.currentTile = startTile;
         this.timeRemaining = timeRemaining;
     }
 
-    public Long getId() { return id; }
-    public Player getPlayer() { return player; }
-    public Maze getMaze() { return maze; }
-    public Tile getCurrentTile() { return currentTile; }
-    public int getTimeRemaining() { return timeRemaining; }
-
-    public void setCurrentTile(Tile currentTile) { this.currentTile = currentTile; }
-    public void setTimeRemaining(int timeRemaining) { this.timeRemaining = timeRemaining; }
 }

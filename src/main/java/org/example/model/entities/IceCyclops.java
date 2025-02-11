@@ -14,12 +14,19 @@ public class IceCyclops extends Adversity {
     }
 
     public IceCyclops(int x, int y, Maze maze) {
-        super(x, y, maze, AdversityType.ENEMY);
+        super(x, y, maze, AdversityType.ENEMY,5);
     }
 
     @Override
+
     public void triggerEffect(Player player) {
-        System.out.println("Un Ice Cyclops genera Nebbia Gelida sulle caselle adiacenti, rallentando i tuoi movimenti.");
-        // Logica per applicare l'effetto simile a FreezingFog sulle caselle adiacenti
+        System.out.println("❄️ Un Ice Cyclops genera Nebbia Gelida! La tua velocità è ridotta per " + getEffectDuration() + " secondi.");
+        player.setSpeed(player.getSpeed() / 3);
+        try {
+            Thread.sleep(getEffectDuration() * 1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        player.setSpeed(player.getSpeed() * 3); // Ripristina velocità normale
     }
 }

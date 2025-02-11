@@ -6,17 +6,17 @@ import org.example.model.Profile;
 
 @Getter
 @Setter
-public class SessionFactory {
+public class GameSessionManager {
 
-    private static final SessionFactory instance = new SessionFactory();
+    private static final GameSessionManager instance = new GameSessionManager();
 
     private Profile profile;
 
-    private SessionFactory() {
+    private GameSessionManager() {
         this.profile = null;
     }
 
-    public static SessionFactory getInstance() {
+    public static synchronized GameSessionManager getInstance() {
         return instance;
     }
 

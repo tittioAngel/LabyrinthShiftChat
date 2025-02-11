@@ -3,10 +3,17 @@ package org.example.model.entities;
 import jakarta.persistence.*;
 import org.example.model.Maze;
 import org.example.model.Player;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "adversity_type", discriminatorType = DiscriminatorType.STRING)
+@Getter
+@Setter
+@NoArgsConstructor
 public abstract class Adversity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,13 +31,16 @@ public abstract class Adversity {
 
     private boolean activated = false;
 
-    public Adversity() { }
+    @Column(nullable = false)
+    private int effectDuration = 0;
 
-    public Adversity(int x, int y, Maze maze, AdversityType adversityType) {
+
+    public Adversity(int x, int y, Maze maze, AdversityType adversityType, int effectDuration) {
         this.x = x;
         this.y = y;
         this.maze = maze;
         this.adversityType = adversityType;
+        this.effectDuration = effectDuration;
     }
 
     /**
@@ -39,15 +49,15 @@ public abstract class Adversity {
      */
     public abstract void triggerEffect(Player player);
 
-    // Getters e setters
-    public Long getId() { return id; }
-    public int getX() { return x; }
-    public int getY() { return y; }
-    public Maze getMaze() { return maze; }
-    public AdversityType getAdversityType() { return adversityType; }
-    public boolean isActivated() { return activated; }
-
-    public void setActivated(boolean activated) { this.activated = activated; }
-    public void setX(int x) { this.x = x; }
-    public void setY(int y) { this.y = y; }
+//    // Getters e setters
+//    public Long getId() { return id; }
+//    public int getX() { return x; }
+//    public int getY() { return y; }
+//    public Maze getMaze() { return maze; }
+//    public AdversityType getAdversityType() { return adversityType; }
+//    public boolean isActivated() { return activated; }
+//
+//    public void setActivated(boolean activated) { this.activated = activated; }
+//    public void setX(int x) { this.x = x; }
+//    public void setY(int y) { this.y = y; }
 }
