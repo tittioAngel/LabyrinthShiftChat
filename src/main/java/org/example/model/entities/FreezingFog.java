@@ -14,7 +14,7 @@ public class FreezingFog extends Adversity {
     }
 
     public FreezingFog(int x, int y, Maze maze) {
-        super(x, y, maze, AdversityType.OBSTACLE);
+        super(x, y, maze, AdversityType.OBSTACLE,7);
     }
 
     @Override

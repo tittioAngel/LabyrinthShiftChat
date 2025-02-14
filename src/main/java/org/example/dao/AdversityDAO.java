@@ -23,4 +23,13 @@ public class AdversityDAO {
                     .list();
         }
     }
+
+    public List<Adversity> findAllActiveByMaze(Long mazeId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "FROM Adversity WHERE maze.id = :mazeId AND activated = false", Adversity.class)
+                    .setParameter("mazeId", mazeId)
+                    .list();
+        }
+    }
 }

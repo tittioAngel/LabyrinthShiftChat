@@ -37,6 +37,7 @@ public class MazeService {
 
     public void displayMaze(Maze maze) {
         List<Tile> tiles = tileDAO.findAllTilesByMaze(maze.getId());
+        List<Adversity> adversities = new AdversityDAO().findAllByMaze(maze.getId());
         int size = maze.getSize();
         char[][] grid = new char[size][size];
 
@@ -57,6 +58,15 @@ public class MazeService {
                 grid[tile.getX()][tile.getY()] = 'E';  // Uscita come E
             } else if (tile instanceof StartTile) {
                 grid[tile.getX()][tile.getY()] = 'S';  // Inizio come S
+            }
+        }
+
+        // Posiziona i nemici e ostacoli
+        for (Adversity adversity : adversities) {
+            if (adversity.getAdversityType() == AdversityType.ENEMY) {
+                grid[adversity.getX()][adversity.getY()] = 'N'; // Nemici
+            } else {
+                grid[adversity.getX()][adversity.getY()] = 'O'; // Ostacoli
             }
         }
 
@@ -223,23 +233,5 @@ public class MazeService {
         throw new IllegalStateException("Nessuna posizione di partenza trovata nel labirinto!");
     }
 
-    /**
-     * Controlla se, nella posizione (x, y) del labirinto, sono presenti ostacoli ed enemy.
-     * Se presenti, ne attiva l'effetto sul giocatore passato come parametro.
-     */
-    public void checkTileEffects(Maze maze, int x, int y, Player player) {
-        AdversityDAO adversityDAO = new AdversityDAO();
-        List<Adversity> adversities = adversityDAO.findAllByMaze(maze.getId())
-                .stream()
-                .filter(a -> a.getX() == x && a.getY() == y)
-                .collect(Collectors.toList());
 
-        for (Adversity adversity : adversities) {
-            if (!adversity.isActivated()) {
-                adversity.triggerEffect(player);
-                adversity.setActivated(true);
-                // Qui, eventualmente, si potrebbe aggiornare lo stato dell'Adversity nel database se necessario
-            }
-        }
-    }
 }

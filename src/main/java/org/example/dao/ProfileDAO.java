@@ -64,4 +64,13 @@ public class ProfileDAO {
             return session.get(Profile.class, id);
         }
     }
+
+    public Profile findByUsername(final String username) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "SELECT p FROM Profile p LEFT JOIN FETCH p.completedLevels WHERE p.username = :username", Profile.class)
+                    .setParameter("username", username)
+                    .uniqueResult();
+        }
+    }
 }

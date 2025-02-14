@@ -1,6 +1,8 @@
 package org.example.dao;
 
 import org.example.model.GameSession;
+import org.example.model.Player;
+import org.example.model.Tile;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.example.config.HibernateUtil;
@@ -11,6 +13,11 @@ public class GameSessionDAO {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+
+            // ✅ Salviamo la posizione del giocatore nella sessione
+            Tile currentTile = gameSession.getCurrentTile();
+            gameSession.setCurrentTile(currentTile);
+
             session.persist(gameSession);
             transaction.commit();
         } catch (Exception e) {
@@ -21,7 +28,12 @@ public class GameSessionDAO {
 
     public GameSession findById(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(GameSession.class, id);
+            GameSession gameSession = session.get(GameSession.class, id);
+            if (gameSession != null) {
+                // ✅ Ripristiniamo il giocatore nella sua posizione corrente
+                gameSession.setPlayer(new Player(gameSession.getCurrentTile().getX(), gameSession.getCurrentTile().getY()));
+            }
+            return gameSession;
         }
     }
 
@@ -29,6 +41,11 @@ public class GameSessionDAO {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+
+            // ✅ Aggiorniamo la posizione del giocatore nella sessione
+            Tile currentTile = gameSession.getCurrentTile();
+            gameSession.setCurrentTile(currentTile);
+
             session.merge(gameSession);
             transaction.commit();
         } catch (Exception e) {

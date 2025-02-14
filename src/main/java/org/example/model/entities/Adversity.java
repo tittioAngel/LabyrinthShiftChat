@@ -49,15 +49,4 @@ public abstract class Adversity {
      */
     public abstract void triggerEffect(Player player);
 
-//    // Getters e setters
-//    public Long getId() { return id; }
-//    public int getX() { return x; }
-//    public int getY() { return y; }
-//    public Maze getMaze() { return maze; }
-//    public AdversityType getAdversityType() { return adversityType; }
-//    public boolean isActivated() { return activated; }
-//
-//    public void setActivated(boolean activated) { this.activated = activated; }
-//    public void setX(int x) { this.x = x; }
-//    public void setY(int y) { this.y = y; }
 }

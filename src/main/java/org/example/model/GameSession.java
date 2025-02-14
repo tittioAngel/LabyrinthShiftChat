@@ -16,8 +16,8 @@ public class GameSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "profile_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "profile_id", nullable = false, unique = false)
     private Profile profile;
 
     @ManyToOne
@@ -28,13 +28,19 @@ public class GameSession {
     @JoinColumn(name = "current_tile_id")
     private Tile currentTile; // ✅ Posizione del giocatore nel minimaze
 
+    @Transient
     private int timeRemaining;
+
+
+    @Transient // Non persistiamo `Player`, lo gestiamo in memoria
+    private Player player;
 
     public GameSession(Profile profile, Maze maze, Tile startTile, int timeRemaining) {
         this.profile = profile;
         this.maze = maze;
         this.currentTile = startTile;
         this.timeRemaining = timeRemaining;
+        this.player = new Player(startTile.getX(), startTile.getY()); // ✅ Assegniamo il giocatore alla sessione
     }
 
 }
