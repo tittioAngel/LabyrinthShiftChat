@@ -12,8 +12,11 @@ public class GameSessionManager {
 
     private Profile profile;
 
+    private int levelSelected;
+
     private GameSessionManager() {
         this.profile = null;
+        this.levelSelected = 0;
     }
 
     public static synchronized GameSessionManager getInstance() {

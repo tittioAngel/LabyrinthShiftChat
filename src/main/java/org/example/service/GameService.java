@@ -22,15 +22,16 @@ public class GameService {
         while (!gameSessionManager.isLoggedIn()) {
             Profile profile = selectStartMenuOption(true);
             if (profile != null) {
+                profile.setCompletedLevels(profileService.getCompletedLevelsByProfile(profile));
                 gameSessionManager.setProfile(profile);
             }
         }
         if (gameSessionManager.isLoggedIn()) {
             menuUtil.showUserProfile(gameSessionManager.getProfile());
             manageModeSelected(menuUtil.showModeMenu());
+
+            levelService.playLevel(gameSessionManager.getLevelSelected());
         }
-
-
     }
 
     public Profile retrieveOrCreateProfile(final boolean create) {
@@ -68,7 +69,7 @@ public class GameService {
     public void manageModeSelected(int mode) {
         switch (mode) {
             case 1:
-                manageLevelSelected(menuUtil.showLevelsMenu(gameSessionManager.getProfile()));
+                manageLevelSelected(menuUtil.showStoryModeMenu(gameSessionManager.getProfile()));
                 break;
             case 2:
                 stopGame();
@@ -80,12 +81,29 @@ public class GameService {
     public void manageLevelSelected(int levelType) {
         switch (levelType) {
             case 1:
-                managePlayLevel(gameSessionManager.getProfile().getCompletedLevels().size() + 1 );
+                managePlayLevel(gameSessionManager.getProfile().getCompletedLevels().size() + 1, false);
+                break;
+            case 2:
+                managePlayLevel(0, true);
+                break;
+            case 3:
+                stopGame();
+            default:
+                System.out.println("\n⚠️ Scelta non valida. Riprova.");
         }
     }
 
-    public void managePlayLevel(int levelNumber) {
-        levelService.playLevel(levelNumber);
+    public void managePlayLevel(int levelNumber, boolean retryLevel) {
+        if (retryLevel) {
+            int selectedLevel = menuUtil.showRetryLevelMenu();
+            if (selectedLevel <= 0) {
+                manageModeSelected(1);
+                return;
+            }
+            gameSessionManager.setLevelSelected(selectedLevel);
+        } else {
+            gameSessionManager.setLevelSelected(levelNumber);
+        }
     }
 
 }
