@@ -1,37 +1,36 @@
 package org.example.controller;
 
 import org.example.model.*;
+import org.example.service.GameService;
 import org.example.service.GameSessionService;
+import org.example.service.LevelService;
 import org.example.service.ScoringService;
 
 import java.util.Scanner;
 
 import  org.example.dao.LevelDAO;
+import org.example.singleton.GameSessionManager;
 
 public class GameSessionController {
     private final GameSessionService gameSessionService = new GameSessionService();
+    private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
     private final ScoringService scoringService = new ScoringService();
+    private final LevelService levelService = new LevelService();
     private final LevelDAO levelDAO = new LevelDAO();
     private static final int TOTAL_MINIMAZES = 3;
 
 
-    public void startNewGame() {
+    public void startNewGameSession() {
         Scanner scanner = new Scanner(System.in);
 
-        // ✅ creiamo il profilo del giocatore
-        Profile profile= new Profile("ciao","1234");
-
-        System.out.println("Scegli la difficoltà (EASY, MEDIUM, HARD): ");
-        String difficultyInput = scanner.nextLine().toUpperCase();
-        DifficultyLevel difficulty = DifficultyLevel.valueOf(difficultyInput);
-
+        Level level = levelService.findLevelByNumber(gameSessionManager.getLevelSelected());
 
         int totalStars = 0;
         int minimazeCompleted = 0;
 
         while (minimazeCompleted < TOTAL_MINIMAZES) {
             System.out.println("\n🌀 Inizio Minimaze " + (minimazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
-            GameSession gameSession = gameSessionService.startNewMinimaze(difficulty,profile);
+            GameSession gameSession = gameSessionService.startNewMinimaze(level.getDifficultyLevel(), gameSessionManager.getProfile());
 
             // Gestione locale del timer per 60 secondi
             int stars = handlePlayerMovement(scanner, gameSession);
@@ -83,18 +82,5 @@ public class GameSessionController {
                 return stars;
             }
         }
-    }
-
-
-
-
-
-    public void playLevel(int levelNumber) {
-        // Recupera il livello dal database (opzionale se serve per logica di gioco)
-        Level level = levelDAO.retrieveLevelByNumber(levelNumber);
-
-        // Avvia la nuova sessione di gioco (minimaze)
-        GameSessionController gameSessionController = new GameSessionController();
-        gameSessionController.startNewGame();
     }
 }

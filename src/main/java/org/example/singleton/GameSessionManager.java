@@ -2,6 +2,7 @@ package org.example.singleton;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.model.GameMode;
 import org.example.model.Profile;
 
 @Getter
@@ -12,10 +13,13 @@ public class GameSessionManager {
 
     private Profile profile;
 
+    private GameMode gameModeSelected;
+
     private int levelSelected;
 
     private GameSessionManager() {
         this.profile = null;
+        this.gameModeSelected = null;
         this.levelSelected = 0;
     }
 

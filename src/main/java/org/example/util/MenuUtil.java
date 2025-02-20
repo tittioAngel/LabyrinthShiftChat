@@ -2,6 +2,7 @@ package org.example.util;
 
 import lombok.NoArgsConstructor;
 import org.example.model.CompletedLevel;
+import org.example.model.GameMode;
 import org.example.model.Profile;
 import org.example.service.ProfileService;
 import org.example.singleton.GameSessionManager;
@@ -20,7 +21,7 @@ public class MenuUtil {
         if (isFirst) {
             System.out.println("📜 Scegli un'opzione:");
         } else {
-            System.out.println("❌ Credenziali errate. Scegli un'opzione:");
+            System.out.println("❌ Qualcosa è andato storto. Riprova. \n📜 Scegli un'opzione:");
         }
         System.out.println("1️⃣  Accedi");
         System.out.println("2️⃣  Crea Nuovo Profilo");
@@ -47,7 +48,7 @@ public class MenuUtil {
     }
 
     public void showUserProfile(Profile profile) {
-        System.out.println("------------------------------------------------------");
+        System.out.println("\n------------------------------------------------------");
         System.out.println("🎮 PROFILO UTENTE: " + profile.getUsername());
         System.out.println("🏆 Livelli completati:");
 
@@ -69,13 +70,13 @@ public class MenuUtil {
             System.out.println("------------------------------------------------------");
         } else {
             System.out.println("    ❌ Nessun livello completato.");
-            System.out.println("------------------------------------------------------  \n");
+            System.out.println("------------------------------------------------------");
         }
     }
 
 
     public int showStoryModeMenu(Profile profile) {
-        System.out.println("\n🎮 Bevenuto nella Modalità Storia!\n Scegli il livello da giocare: ");
+        System.out.println("\n🎮 Bevenuto nella Modalità Storia! \n📜 Scegli il livello da giocare: ");
         System.out.println("1️⃣  Gioca il prossimo livello [Livello " + profile.getCompletedLevels().size() + 1 + "]");
         System.out.println("2️⃣  Riprova uno dei livelli precedenti");
         System.out.println("3️⃣  Esci dal gioco");
@@ -89,8 +90,12 @@ public class MenuUtil {
 
     public int showModeMenu() {
         System.out.println("🎮 Scegli la modalità da giocare: ");
-        System.out.println("1️⃣  Modalità Storia");
-        System.out.println("2️⃣  Esci dal gioco");
+        int index = 1;
+        for (GameMode mode : GameMode.values()) {
+            System.out.println(index + "️⃣  " + GameMode.formatGameMode(mode));
+            index++;
+        }
+        System.out.println(index + "️⃣  Esci dal gioco");
         System.out.print("👉 Scelta: ");
 
         int scelta = scanner.nextInt();
@@ -109,9 +114,9 @@ public class MenuUtil {
 
         System.out.println("\n🔁 Scegli un livello da riprovare:");
         for (int i = 0; i < completedLevels.size(); i++) {
-            System.out.println((i + 1) + ". Livello: " + completedLevels.get(i).getLevel().getName());
+            System.out.println((i + 1) + "️⃣  Livello: " + completedLevels.get(i).getLevel().getName());
         }
-        System.out.println((completedLevels.size() + 1) + ". Torna al menu principale");
+        System.out.println((completedLevels.size() + 1) + "️⃣  Torna al menu principale");
 
         int scelta;
         do {

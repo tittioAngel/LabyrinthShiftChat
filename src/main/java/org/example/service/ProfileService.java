@@ -12,13 +12,10 @@ public class ProfileService {
 
     private static final ProfileDAO profileDAO = new ProfileDAO();
 
-    private static final GameService gameService = new GameService();
-
     public Profile profileLogin(final String username, final String password) {
-        final Profile profile = getProfileByUsernameAndPassword(username, password);
-
-        if (profile == null) {
-            gameService.selectStartMenuOption(false);
+        Profile profile = profileDAO.findByUsernameAndPassword(username, password);
+        if (profile != null) {
+            profile.setCompletedLevels(getCompletedLevelsByProfile(profile));
         }
         return profile;
     }
@@ -26,13 +23,9 @@ public class ProfileService {
     public Profile createProfile(final String username,final String password) {
         Profile profile = new Profile(username, password);
         if (!profileDAO.save(profile)) {
-            gameService.selectStartMenuOption(true);
+            return null;
         }
         return profile;
-    }
-
-    public Profile getProfileByUsernameAndPassword(final String username, final String password) {
-        return profileDAO.findByUsernameAndPassword(username, password);
     }
 
     public List<CompletedLevel> getCompletedLevelsByProfile(final Profile profile) {

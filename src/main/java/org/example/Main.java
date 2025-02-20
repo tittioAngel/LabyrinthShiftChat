@@ -7,8 +7,10 @@ public class Main {
     public static void main(String[] args) {
 
         GameController gameController = new GameController();
+
+        GameSessionController gameSessionController = new GameSessionController();
+
         gameController.startGame();
-        //GameSessionController gameSessionController = new GameSessionController();
-        //gameSessionController.startNewGame();
+        gameSessionController.startNewGameSession();
     }
 }
