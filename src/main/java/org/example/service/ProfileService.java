@@ -31,4 +31,9 @@ public class ProfileService {
     public List<CompletedLevel> getCompletedLevelsByProfile(final Profile profile) {
         return profileDAO.findCompletedLevelsByProfile(profile);
     }
+
+
+    public void updateProfile(Profile profile) {
+        profileDAO.update(profile);
+    }
 }

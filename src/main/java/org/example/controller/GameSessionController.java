@@ -3,6 +3,7 @@ package org.example.controller;
 import org.example.model.*;
 import org.example.service.GameSessionService;
 import org.example.service.LevelService;
+import org.example.service.ProfileService;
 import org.example.service.ScoringService;
 
 import java.util.Scanner;
@@ -15,6 +16,7 @@ public class GameSessionController {
     private final ScoringService scoringService = new ScoringService();
     private final LevelService levelService = new LevelService();
     private static final int TOTAL_MINIMAZES = 3;
+    private final ProfileService profileService = new ProfileService(); // Assicurati di avere questo service aggiornato private static final int
 
     private final Scanner scanner = new Scanner(System.in);
 
@@ -43,7 +45,26 @@ public class GameSessionController {
         double averageStars = totalStars / (double) TOTAL_MINIMAZES;
         System.out.println("\n🏆 **Complimenti! Hai completato tutti i minimaze del livello.** 🏆");
         System.out.println("⭐ Punteggio finale medio: " + averageStars + " stelle.");
+
+
+        // Aggiornamento del profilo: crea un CompletedLevel e aggiungilo al profilo
+        CompletedLevel completedLevel = new CompletedLevel();
+        completedLevel.setLevel(level);
+        completedLevel.setScore((int) averageStars);
+        completedLevel.setProfile(gameSessionManager.getProfile());
+
+        // Aggiunge il CompletedLevel al profilo (il metodo addCompletedLevel è definito in Profile)
+        gameSessionManager.getProfile().addCompletedLevel(completedLevel);
+
+        // Aggiorna il profilo nel database
+        profileService.updateProfile(gameSessionManager.getProfile());
+
+        // Resetta la sessione per passare al livello successivo o terminare il gioco
+        gameSessionManager.setGameSession(null);
+
     }
+
+
 
     private int handlePlayerMovement(GameSession gameSession) {
         long startTime = System.currentTimeMillis(); // Avvio del timer locale

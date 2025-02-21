@@ -2,9 +2,7 @@ package org.example.dao;
 
 import lombok.NoArgsConstructor;
 import org.example.config.HibernateUtil;
-import org.example.model.CompletedLevel;
-import org.example.model.Player;
-import org.example.model.Profile;
+import org.example.model.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -71,6 +69,20 @@ public class ProfileDAO {
                             "SELECT p FROM Profile p LEFT JOIN FETCH p.completedLevels WHERE p.username = :username", Profile.class)
                     .setParameter("username", username)
                     .uniqueResult();
+        }
+    }
+
+    public void update(Profile profile) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+
+            session.merge(profile);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("Errore durante l'aggiornamento della sessione di gioco", e);
         }
     }
 }

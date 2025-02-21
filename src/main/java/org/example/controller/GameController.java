@@ -98,6 +98,9 @@ public class GameController {
             case 2:
                 manageRetryLevel();
                 break;
+            case 3:
+                gameService.stopGame();
+                break;
             default:
                 System.out.println("\n⚠️ Scelta non valida. Riprova.");
         }

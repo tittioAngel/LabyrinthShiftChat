@@ -50,11 +50,10 @@ public class MenuUtil {
     public void showUserProfile(Profile profile) {
         System.out.println("\n------------------------------------------------------");
         System.out.println("🎮 PROFILO UTENTE: " + profile.getUsername());
-        System.out.println("🏆 Livelli completati:");
+        System.out.println("\n 🏆 Livelli completati:");
 
         List<CompletedLevel> completedLevels = profile.getCompletedLevels();
         if (completedLevels != null && !completedLevels.isEmpty()) {
-            System.out.println("\n🎮 Livelli Completati:");
             System.out.println("------------------------------------------------------");
             System.out.printf("| %-20s | %-10s | %-8s |\n", "Livello", "Difficoltà", "Punteggio");
             System.out.println("------------------------------------------------------");
@@ -77,7 +76,7 @@ public class MenuUtil {
 
     public int showStoryModeMenu(Profile profile) {
         System.out.println("\n🎮 Bevenuto nella Modalità Storia! \n📜 Scegli il livello da giocare: ");
-        System.out.println("1️⃣  Gioca il prossimo livello [Livello " + profile.getCompletedLevels().size() + 1 + "]");
+        System.out.println("1️⃣  Gioca il prossimo livello [Livello " + (profile.getCompletedLevels().size() + 1 )+ "]");
         System.out.println("2️⃣  Riprova uno dei livelli precedenti");
         System.out.println("3️⃣  Esci dal gioco");
         System.out.print("👉 Scelta: ");
