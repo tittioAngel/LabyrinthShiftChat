@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.controller.GameController;
 import org.example.controller.GameSessionController;
-import org.example.controller.PlayerController;
+//import org.example.controller.PlayerController;
 import org.example.singleton.GameSessionManager;
 
 public class Main {
@@ -10,7 +10,7 @@ public class Main {
 
         GameController gameController = new GameController();
         GameSessionController gameSessionController = new GameSessionController();
-        PlayerController playerController = new PlayerController();
+        //PlayerController playerController = new PlayerController();
         GameSessionManager gameSessionManager = GameSessionManager.getInstance();
 
         while (true) {

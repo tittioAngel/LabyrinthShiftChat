@@ -30,16 +30,16 @@ public class GameSessionManager {
     public static synchronized GameSessionManager getInstance() {
         return instance;
     }
+        public boolean isLoggedIn () {
+            return profile != null;
+        }
 
-    public boolean isLoggedIn() {
-        return profile != null;
-    }
+        public void logOut () {
+            profile = null;
+        }
 
-    public void logOut() {
-        profile = null;
-    }
+        public boolean isGameOver () {
+            return gameSession != null;
+        }
 
-    public boolean isGameOver() {
-        return gameSession != null;
-    }
 }

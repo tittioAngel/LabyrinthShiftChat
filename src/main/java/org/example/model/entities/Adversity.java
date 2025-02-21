@@ -43,6 +43,14 @@ public abstract class Adversity {
         this.effectDuration = effectDuration;
     }
 
+    // Metodo finale che garantisce l'esecuzione dell'effetto una sola volta
+    public final void applyEffect(Player player) {
+        if (!activated) {
+            triggerEffect(player);
+            activated = true;
+        }
+    }
+
     /**
      * Metodo astratto che, in base al tipo di adversità, applica l'effetto sul giocatore.
      * Le sottoclassi implementeranno questo metodo per definire il comportamento specifico.

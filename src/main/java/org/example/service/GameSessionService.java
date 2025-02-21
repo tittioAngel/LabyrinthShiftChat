@@ -18,6 +18,7 @@ public class GameSessionService {
     private final MazeService mazeService = new MazeService();
     private final ScoringService scoringService = new ScoringService();
     public static final int EXIT_REACHED = 1;
+    private final AdversityDAO adversityDAO = new AdversityDAO();
 
     public GameSession generateGameSession(DifficultyLevel difficulty, Profile profile) {
 
@@ -54,9 +55,11 @@ public class GameSessionService {
                 .collect(Collectors.toList());
 
         for (Adversity adversity : adversities) {
-            // Applica l'effetto solo se non è già stato attivato
-            adversity.triggerEffect(player);
-            adversity.setActivated(true);
+            // Utilizza il metodo applyEffect che controlla lo stato activated
+            adversity.applyEffect(player);
+
+            // Aggiorna l'istanza di Adversity nel database per persistere il flag activated
+            adversityDAO.update(adversity);
 
             // Aggiorna la posizione del giocatore in base all'effetto, se necessario
             gameSession.setCurrentTile(
