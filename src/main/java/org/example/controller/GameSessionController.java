@@ -1,14 +1,12 @@
 package org.example.controller;
 
 import org.example.model.*;
-import org.example.service.GameService;
 import org.example.service.GameSessionService;
 import org.example.service.LevelService;
 import org.example.service.ScoringService;
 
 import java.util.Scanner;
 
-import  org.example.dao.LevelDAO;
 import org.example.singleton.GameSessionManager;
 
 public class GameSessionController {
@@ -16,12 +14,12 @@ public class GameSessionController {
     private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
     private final ScoringService scoringService = new ScoringService();
     private final LevelService levelService = new LevelService();
-    private final LevelDAO levelDAO = new LevelDAO();
     private static final int TOTAL_MINIMAZES = 3;
+
+    private final Scanner scanner = new Scanner(System.in);
 
 
     public void startNewGameSession() {
-        Scanner scanner = new Scanner(System.in);
 
         Level level = levelService.findLevelByNumber(gameSessionManager.getLevelSelected());
 
@@ -30,10 +28,10 @@ public class GameSessionController {
 
         while (minimazeCompleted < TOTAL_MINIMAZES) {
             System.out.println("\n🌀 Inizio Minimaze " + (minimazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
-            GameSession gameSession = gameSessionService.startNewMinimaze(level.getDifficultyLevel(), gameSessionManager.getProfile());
+            GameSession gameSession = gameSessionService.generateGameSession(level.getDifficultyLevel(), gameSessionManager.getProfile());
 
             // Gestione locale del timer per 60 secondi
-            int stars = handlePlayerMovement(scanner, gameSession);
+            int stars = handlePlayerMovement(gameSession);
             if (stars > 0) {
                 minimazeCompleted++;
                 totalStars += stars;
@@ -47,7 +45,7 @@ public class GameSessionController {
         System.out.println("⭐ Punteggio finale medio: " + averageStars + " stelle.");
     }
 
-    private int handlePlayerMovement(Scanner scanner, GameSession gameSession) {
+    private int handlePlayerMovement(GameSession gameSession) {
         long startTime = System.currentTimeMillis(); // Avvio del timer locale
         long timeLimit = 60 * 1000; // 60 secondi in millisecondi
 

@@ -3,14 +3,15 @@ package org.example.service;
 import org.example.dao.*;
 import org.example.model.*;
 import org.example.model.entities.Adversity;
-import org.example.model.tiles.Corridor;
 import org.example.model.tiles.ExitTile;
 import org.example.model.tiles.Wall;
+import org.example.singleton.GameSessionManager;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameSessionService {
+    private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
     private final GameSessionDAO gameSessionDAO = new GameSessionDAO();
     private final MazeDAO mazeDAO = new MazeDAO();
     private final TileDAO tileDAO = new TileDAO();
@@ -18,27 +19,20 @@ public class GameSessionService {
     private final ScoringService scoringService = new ScoringService();
     public static final int EXIT_REACHED = 1;
 
-    public GameSession startNewMinimaze(DifficultyLevel difficulty,Profile profile) {
-       ProfileDAO profileDAO = new ProfileDAO();
-
-        // ✅ Verifica se il profilo è già salvato
-        Profile existingProfile = profileDAO.findByUsername(profile.getUsername());
-        if (existingProfile == null) {
-            profileDAO.save(profile); // ✅ Salva il profilo se non esiste
-            existingProfile = profileDAO.findByUsername(profile.getUsername()); // Ricarica l'oggetto salvato
-        }
+    public GameSession generateGameSession(DifficultyLevel difficulty, Profile profile) {
 
         //Generazione del minimaze
         Maze maze = mazeService.generateRandomMaze(difficulty);
         Tile startTile = mazeService.getStartTile(maze);
 
-        //Previsualizzazione del minimaze
-        previewMaze(maze);
-
-
         //Creiamo la sessione di gioco
-        GameSession gameSession = new GameSession(existingProfile, maze, startTile, 60);
-        gameSessionDAO.save(gameSession);
+        GameSession gameSession = new GameSession(maze, startTile, 60);
+        saveGameSession(gameSession);
+
+        gameSessionManager.setGameSession(gameSession);
+
+        //Previsualizzazione del minimaze
+        mazeService.previewMiniMaze(maze);
 
         System.out.println("✅ Il gioco inizia ora con la visione limitata!");
 
@@ -71,6 +65,10 @@ public class GameSessionService {
 
             System.out.println("🎭 Effetto applicato: " + adversity.getAdversityType());
         }
+    }
+
+    public void saveGameSession(GameSession gameSession) {
+        gameSessionDAO.save(gameSession);
     }
 
     public int movePlayer(GameSession gameSession, String direction) {
@@ -145,7 +143,7 @@ public class GameSessionService {
         Tile newStartTile = mazeService.getStartTile(newMaze);
 
         // Mostriamo la previsualizzazione del nuovo labirinto
-        previewMaze(newMaze);
+        mazeService.previewMiniMaze(newMaze);
 
         // ✅ Reimpostiamo il giocatore nella nuova posizione di partenza
         gameSession.getPlayer().setPosition(newStartTile.getX(), newStartTile.getY());
@@ -165,20 +163,6 @@ public class GameSessionService {
         mazeService.displayLimitedView(gameSession.getMaze(), gameSession.getCurrentTile().getX(), gameSession.getCurrentTile().getY());
     }
 
-    public void previewMaze(Maze maze) {
-        System.out.println("🔍 Visualizzazione completa del labirinto per " + maze.getDifficulty().getPreviewTime() + " secondi:");
-
-        // Mostriamo il labirinto intero
-        mazeService.displayMaze(maze);
-
-        try {
-            Thread.sleep(maze.getDifficulty().getPreviewTime() * 1000); // Attesa per la previsualizzazione
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        System.out.println("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
-    }
 
     public int computeStars(long timeTakenSeconds) {
         return scoringService.computeStars(timeTakenSeconds);

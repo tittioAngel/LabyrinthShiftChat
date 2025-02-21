@@ -17,26 +17,20 @@ public class GameSession {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "profile_id", nullable = false, unique = false)
-    private Profile profile;
-
-    @ManyToOne
     @JoinColumn(name = "maze_id", nullable = false)
     private Maze maze;
 
     @ManyToOne
     @JoinColumn(name = "current_tile_id")
-    private Tile currentTile; // ✅ Posizione del giocatore nel minimaze
+    private Tile currentTile;
 
     @Transient
     private int timeRemaining;
 
-
-    @Transient // Non persistiamo `Player`, lo gestiamo in memoria
+    @Transient
     private Player player;
 
-    public GameSession(Profile profile, Maze maze, Tile startTile, int timeRemaining) {
-        this.profile = profile;
+    public GameSession(Maze maze, Tile startTile, int timeRemaining) {
         this.maze = maze;
         this.currentTile = startTile;
         this.timeRemaining = timeRemaining;

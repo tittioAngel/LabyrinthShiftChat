@@ -233,5 +233,20 @@ public class MazeService {
         throw new IllegalStateException("Nessuna posizione di partenza trovata nel labirinto!");
     }
 
+    public void previewMiniMaze(Maze maze) {
+        System.out.println("🔍 Visualizzazione completa del labirinto per " + maze.getDifficulty().getPreviewTime() + " secondi:");
+
+        // Mostriamo il labirinto intero
+        displayMaze(maze);
+
+        try {
+            Thread.sleep(maze.getDifficulty().getPreviewTime() * 1000L); // Attesa per la previsualizzazione
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
+    }
+
 
 }

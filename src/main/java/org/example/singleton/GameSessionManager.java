@@ -3,6 +3,7 @@ package org.example.singleton;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.model.GameMode;
+import org.example.model.GameSession;
 import org.example.model.Profile;
 
 @Getter
@@ -17,10 +18,13 @@ public class GameSessionManager {
 
     private int levelSelected;
 
+    private GameSession gameSession;
+
     private GameSessionManager() {
         this.profile = null;
         this.gameModeSelected = null;
         this.levelSelected = 0;
+        this.gameSession = null;
     }
 
     public static synchronized GameSessionManager getInstance() {
@@ -33,5 +37,9 @@ public class GameSessionManager {
 
     public void logOut() {
         profile = null;
+    }
+
+    public boolean isGameOver() {
+        return gameSession != null;
     }
 }
