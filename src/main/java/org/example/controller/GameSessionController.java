@@ -23,7 +23,7 @@ public class GameSessionController {
 
     public void startNewGameSession() {
 
-        Level level = levelService.findLevelByNumber(gameSessionManager.getLevelSelected());
+        Level level = gameSessionManager.getLevelSelected();
 
         int totalStars = 0;
         int minimazeCompleted = 0;
