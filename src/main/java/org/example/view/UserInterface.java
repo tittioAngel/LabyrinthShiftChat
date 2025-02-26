@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.controller.GameController;
 import org.example.controller.GameSessionController;
+import org.example.dao.LevelDAO;
 import org.example.model.CompletedLevel;
 import org.example.model.GameMode;
+import org.example.model.Level;
 import org.example.model.Profile;
 import org.example.singleton.GameSessionManager;
 
@@ -20,6 +22,7 @@ public class UserInterface {
     private final GameSessionController gameSessionController;
     private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
     private final Scanner scanner;
+    private LevelDAO levelDAO = new LevelDAO();
 
     public UserInterface(GameController gameController, GameSessionController gameSessionController) {
         this.gameController = gameController;
@@ -83,6 +86,7 @@ public class UserInterface {
         }
 
         gameSessionController.startNewGameSession();
+
     }
 
     public HashMap<String, String> retrieveCredentials() {
@@ -211,10 +215,9 @@ public class UserInterface {
                 stayInRetryMenu = false;
             } else {
                 gameSessionManager.setLevelSelected(gameController.obtainLevelToPlay(scelta));
+                gameSessionController.startNewGameSession();
                 stayInRetryMenu = false;
             }
         }
     }
-
-
 }
