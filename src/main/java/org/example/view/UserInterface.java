@@ -82,31 +82,40 @@ public class UserInterface {
         }
 
         if (gameSessionManager.isLevelSelected()) {
-            Level level = gameSessionManager.getLevelSelected();
-            int miniMazeCompleted = 0;
-            int totalStars = 0;
-
-            System.out.println("\n🎮 Livello selezionato: " + level.getName());
-
-            while (miniMazeCompleted < TOTAL_MINIMAZES) {
-                gameSessionController.createGameSession();
-
-                System.out.println("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
-
-                gameSessionController.showMiniMazePreview();
-
-                int stars = managePlayerMovement();
-                totalStars += stars;
-
-                System.out.println("\n🏆 Hai completato il MiniMaze " + (miniMazeCompleted + 1) + " con punteggio : " + stars + "/3");
-
-                Thread.sleep(3000);
-
-                miniMazeCompleted++;
-            }
-
-            manageEndLevel(totalStars);
+            startGamePlay();
         }
+    }
+
+
+    /**
+     * Con questo metodo parte il gameplay
+     * @throws InterruptedException
+     */
+    public void startGamePlay() throws InterruptedException {
+        Level level = gameSessionManager.getLevelSelected();
+        int miniMazeCompleted = 0;
+        int totalStars = 0;
+
+        System.out.println("\n🎮 Livello selezionato: " + level.getName());
+
+        while (miniMazeCompleted < TOTAL_MINIMAZES) {
+            gameSessionController.createGameSession();
+
+            System.out.println("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
+
+            gameSessionController.showMiniMazePreview();
+
+            int stars = managePlayerMovement();
+            totalStars += stars;
+
+            System.out.println("\n🏆 Hai completato il MiniMaze " + (miniMazeCompleted + 1) + " con punteggio : " + stars + "/3");
+
+            Thread.sleep(3000);
+
+            miniMazeCompleted++;
+        }
+
+        manageEndLevel(totalStars);
     }
 
     public HashMap<String, String> retrieveCredentials() {
@@ -122,7 +131,7 @@ public class UserInterface {
         return credentials;
     }
 
-    public boolean manageSelectedMode(GameMode gameMode) {
+    public boolean manageSelectedMode(GameMode gameMode) throws InterruptedException {
         switch (gameMode) {
             case STORY_MODE:
                 return manageStoryMode();
@@ -160,7 +169,7 @@ public class UserInterface {
         }
     }
 
-    public boolean manageStoryMode() {
+    public boolean manageStoryMode() throws InterruptedException {
         boolean stayInStoryMode = true;
         while (stayInStoryMode) {
             showUserProfile(gameSessionManager.getProfile());
@@ -199,7 +208,7 @@ public class UserInterface {
         return true;
     }
 
-    public void showRetryLevelMenu() {
+    public void showRetryLevelMenu() throws InterruptedException {
         List<CompletedLevel> completedLevels = gameSessionManager.getProfile().getCompletedLevels();
 
         if (completedLevels.isEmpty()) {
@@ -233,7 +242,13 @@ public class UserInterface {
             } else if (scelta == completedLevels.size() + 1) {
                 stayInRetryMenu = false;
             } else {
+                System.out.println("il vecchio livello " +gameSessionManager.getLevelSelected());
                 gameSessionManager.setLevelSelected(gameController.obtainLevelToPlay(scelta));
+                System.out.println("DEBUG sono tornato in UserInterface");
+                System.out.println("DEBUG il nuovo livello " +gameSessionManager.getLevelSelected());
+                startGamePlay();
+
+                System.out.println("DEBUG Sono tornato in UserInterface");
                 stayInRetryMenu = false;
             }
         }
@@ -275,8 +290,8 @@ public class UserInterface {
     public void manageEndLevel(int totalStars) {
 
         int averageStars = totalStars / TOTAL_MINIMAZES;
+        //Devo controllare se il livello è gia stato completato
         gameSessionController.saveCompletedLevel(averageStars);
-
         System.out.println("\n🏆 **Complimenti! Hai completato tutti i minimaze del livello.** 🏆");
         System.out.println("⭐ Punteggio finale medio: " + averageStars + " stelle.");
 
