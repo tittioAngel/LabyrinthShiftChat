@@ -4,16 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.controller.GameController;
 import org.example.controller.GameSessionController;
-import org.example.dao.LevelDAO;
-import org.example.model.CompletedLevel;
-import org.example.model.GameMode;
-import org.example.model.Level;
-import org.example.model.Profile;
+import org.example.model.*;
+import org.example.model.tiles.ExitTile;
+import org.example.service.GameSessionService;
 import org.example.singleton.GameSessionManager;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 @Getter
 @Setter
@@ -22,7 +18,7 @@ public class UserInterface {
     private final GameSessionController gameSessionController;
     private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
     private final Scanner scanner;
-    private LevelDAO levelDAO = new LevelDAO();
+    private static final int TOTAL_MINIMAZES = 3;
 
     public UserInterface(GameController gameController, GameSessionController gameSessionController) {
         this.gameController = gameController;
@@ -30,7 +26,7 @@ public class UserInterface {
         this.scanner = new Scanner(System.in);
     }
 
-    public void start() {
+    public void start() throws InterruptedException {
         System.out.println("🎮 Benvenuto in LabyrinthShiftChat! 🎮");
 
         int i = 0;
@@ -85,8 +81,32 @@ public class UserInterface {
             }
         }
 
-        gameSessionController.startNewGameSession();
+        if (gameSessionManager.isLevelSelected()) {
+            Level level = gameSessionManager.getLevelSelected();
+            int miniMazeCompleted = 0;
+            int totalStars = 0;
 
+            System.out.println("\n🎮 Livello selezionato: " + level.getName());
+
+            while (miniMazeCompleted < TOTAL_MINIMAZES) {
+                gameSessionController.createGameSession();
+
+                System.out.println("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
+
+                gameSessionController.showMiniMazePreview();
+
+                int stars = managePlayerMovement();
+                totalStars += stars;
+
+                System.out.println("\n🏆 Hai completato il MiniMaze " + (miniMazeCompleted + 1) + " con punteggio : " + stars + "/3");
+
+                Thread.sleep(3000);
+
+                miniMazeCompleted++;
+            }
+
+            manageEndLevel(totalStars);
+        }
     }
 
     public HashMap<String, String> retrieveCredentials() {
@@ -215,9 +235,52 @@ public class UserInterface {
                 stayInRetryMenu = false;
             } else {
                 gameSessionManager.setLevelSelected(gameController.obtainLevelToPlay(scelta));
-                gameSessionController.startNewGameSession();
                 stayInRetryMenu = false;
             }
         }
+    }
+
+    public int managePlayerMovement() {
+        System.out.println("✅ Il gioco inizia ora con la visione limitata!");
+
+        long startTime = System.currentTimeMillis(); // Avvio del timer locale
+        long timeLimit = 60 * 1000; // 60 secondi in millisecondi
+
+        while (true) {
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            long remainingTime = (timeLimit - elapsedTime) / 1000;
+
+            // Se il tempo è scaduto, rigeneriamo il minimaze e resettare il timer
+            if (remainingTime <= 0) {
+                System.out.println("⏳ Tempo scaduto! Rigenerazione del minimaze...");
+                gameSessionController.regenerateMiniMaze();
+                // Reset del timer per il nuovo tentativo sullo stesso minimaze
+                startTime = System.currentTimeMillis();
+                continue; // Riprende il ciclo senza uscire
+            }
+
+            gameSessionController.showLimitedMiniMazeView();
+            System.out.println("\n⏳ Tempo rimasto: " + remainingTime + " secondi.");
+            System.out.print("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire): ");
+
+            String direction = scanner.nextLine().toUpperCase();
+
+            int stars = gameSessionController.manageDirectionSelected(direction, startTime);
+
+            if (stars != 0) {
+                return stars;
+            }
+        }
+    }
+
+    public void manageEndLevel(int totalStars) {
+
+        int averageStars = totalStars / TOTAL_MINIMAZES;
+        gameSessionController.saveCompletedLevel(averageStars);
+
+        System.out.println("\n🏆 **Complimenti! Hai completato tutti i minimaze del livello.** 🏆");
+        System.out.println("⭐ Punteggio finale medio: " + averageStars + " stelle.");
+
+        gameSessionManager.resetSession();
     }
 }

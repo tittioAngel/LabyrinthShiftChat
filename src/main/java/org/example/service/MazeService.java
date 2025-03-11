@@ -28,9 +28,9 @@ public class MazeService {
         // Aggiungiamo ostacoli ed enemy
         addAdversities(maze);
 
-        System.out.println("✅ Minimaze di livello " + difficulty.name() + " generato con successo!");
-        System.out.println("📍 Posizione di partenza: (0, 0)");
-        System.out.println("🏁 Uscita posizionata in (" + (difficulty.getMazeSize() - 1) + ", " + (difficulty.getMazeSize() - 1) + ")");
+//        System.out.println("✅ Minimaze di livello " + difficulty.name() + " generato con successo!");
+//        System.out.println("📍 Posizione di partenza: (0, 0)");
+//        System.out.println("🏁 Uscita posizionata in (" + (difficulty.getMazeSize() - 1) + ", " + (difficulty.getMazeSize() - 1) + ")");
 
         return maze;
     }

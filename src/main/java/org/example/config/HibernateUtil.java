@@ -19,6 +19,7 @@ public class HibernateUtil {
                     .addAnnotatedClass(Tile.class)
                     .addAnnotatedClass(Adversity.class)
                     .addAnnotatedClass(GameSession.class)
+                    .addAnnotatedClass(CompletedLevel.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {
             throw new ExceptionInInitializerError("Errore nella creazione della SessionFactory: " + ex);

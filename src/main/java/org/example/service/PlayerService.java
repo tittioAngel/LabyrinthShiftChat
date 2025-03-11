@@ -1,62 +1,61 @@
-//package org.example.service;
-//
-//import org.example.model.Player;
-//import org.example.dao.PlayerDAO;
-//import org.example.util.MenuUtil;
-//
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Scanner;
-//
-//public class PlayerService {
-//
-//    private final PlayerDAO playerDAO = new PlayerDAO();
-//
-//    private final MenuUtil menuUtil = new MenuUtil();
-//
-//    public Player getPlayerById(Long id) {
-//        return playerDAO.findById(id);
-//    }
-//
-//    public Player getPlayerByName(String username) {
-//        return playerDAO.findByUsername(username);
-//    }
-//
-//    public List<Player> getAllPlayers() {
-//        return playerDAO.findAll();
-//    }
-//
-//    public Player playerLogin(final String username, final String password) {
-//        final Player player = getPlayerByUsernameAndPassword(username, password);
-//        if (player == null) {
-//            int scelta = menuUtil.showStartGameMenu(false);
-//
-//            switch (scelta) {
-//                case 1:
-//                    final HashMap<String, String> credentialsLogin = menuUtil.showCredentialsMenu();
-//                    playerLogin(credentialsLogin.get("username"), credentialsLogin.get("password"));
-//                    break;
-//                case 2:
-//                    final HashMap<String, String> credentialsSignUp = menuUtil.showCredentialsMenu();
-//                    createPlayer(credentialsSignUp.get("username"), credentialsSignUp.get("password"));
-//                    break;
-//                case 3:
-//                    System.out.println("\n👋 Grazie per aver giocato! Alla prossima! 🎮");
-//                    return null;
-//                default:
-//                    System.out.println("\n⚠️ Scelta non valida. Riprova.");
-//            }
-//        }
-//        return player;
-//    }
-//
-//    public Player getPlayerByUsernameAndPassword(final String username, final String password) {
-//        return playerDAO.findByUsernameAndPassword(username, password);
-//    }
-//
-//    public void createPlayer(final String username,final String password) {
-//        Player player = new Player(username, password);
-//        playerDAO.save(player);
-//    }
-//
-//}
+package org.example.service;
+
+
+import org.example.dao.GameSessionDAO;
+import org.example.dao.TileDAO;
+import org.example.model.GameSession;
+import org.example.model.Player;
+import org.example.model.Tile;
+import org.example.model.tiles.ExitTile;
+import org.example.model.tiles.Wall;
+import org.example.singleton.GameSessionManager;
+
+public class PlayerService {
+
+    private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
+    private final TileService tileService = new TileService();
+    private final TileDAO tileDAO = new TileDAO();
+    private final GameSessionDAO gameSessionDAO = new GameSessionDAO();
+
+    public Tile movePlayerOnNewTile(String direction) {
+        GameSession gameSession = gameSessionManager.getGameSession();
+        Player player = gameSession.getPlayer();
+
+        Tile newTile;
+        switch (direction) {
+            case "W": // SU
+                newTile = tileDAO.findTileByPosition(player.getX(), player.getY() - 1, gameSession.getMaze().getId());
+                break;
+            case "S": // GIÙ
+                newTile = tileDAO.findTileByPosition(player.getX(), player.getY() + 1, gameSession.getMaze().getId());
+                break;
+            case "A": // SINISTRA
+                newTile = tileDAO.findTileByPosition(player.getX() - 1, player.getY(), gameSession.getMaze().getId());
+                break;
+            case "D": // DESTRA
+                newTile = tileDAO.findTileByPosition(player.getX() + 1, player.getY(), gameSession.getMaze().getId());
+                break;
+            default:
+                System.out.println("[DEBUG] Comando non valido: " + direction);
+                System.out.println("❌ Direzione non valida. Usa: W, A, S, D.");
+                return null;
+        }
+
+        if (newTile == null) {
+            System.out.println("[DEBUG] ❌ Movimento non consentito! Sei fuori dai confini del labirinto.");
+            return null;
+        }
+
+        if (newTile instanceof Wall) {
+            System.out.println("[DEBUG] 🚧 Hai colpito un muro! Non puoi passare.");
+            return null;
+        }
+
+        player.setPosition(newTile.getX(), newTile.getY());
+        gameSession.setCurrentTile(newTile);
+        gameSessionDAO.update(gameSession);
+
+        return newTile;
+    }
+
+}

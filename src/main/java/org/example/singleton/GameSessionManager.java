@@ -29,20 +29,21 @@ public class GameSessionManager {
         return instance;
     }
 
-    public boolean isLoggedIn () {
+    public boolean isLoggedIn() {
         return profile != null;
     }
 
-    public void logOut () {
+    public void logOut() {
         profile = null;
     }
 
-    public boolean isLevelSelected () {
+    public boolean isLevelSelected() {
         return levelSelected != null;
     }
 
-    public boolean isGameOver () {
-        return gameSession != null;
+    public void resetSession() {
+        levelSelected = null;
+        gameSession = null;
     }
 
 }

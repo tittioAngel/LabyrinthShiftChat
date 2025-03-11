@@ -6,7 +6,7 @@ import org.example.singleton.GameSessionManager;
 import org.example.view.UserInterface;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         GameController gameController = new GameController();
         GameSessionController gameSessionController = new GameSessionController();

@@ -9,7 +9,7 @@
         <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/labyrinthshiftchat?useSSL=false&amp;serverTimezone=UTC</property>
         <property name="hibernate.connection.username">root</property> <!-- Cambia con il tuo username -->
-        <property name="hibernate.connection.password">password</property> <!-- Cambia con la tua password -->
+        <property name="hibernate.connection.password">9ottobre</property> <!-- Cambia con la tua password -->
         <property name="hibernate.cache.use_second_level_cache">false</property>
 
         <!-- Dialect specifico per MySQL -->
@@ -35,7 +35,6 @@
         <mapping class="org.example.model.Tile"/>
         <mapping class="org.example.model.GameSession"/>
         <mapping class="org.example.model.DifficultyLevel"/>
-        <mapping class="org.example.model.MiniMaze"/>
 
         <mapping class="org.example.model.tiles.Corridor"/>
         <mapping class="org.example.model.tiles.Wall"/>
