@@ -43,9 +43,11 @@ public class GameSessionService {
     public void manageSaveCompletedLevel(int averageStars) {
         CompletedLevel completedLevelRetried = completedLevelService.getLevelRetried(gameSessionManager.getLevelSelected().getId(), gameSessionManager.getProfile().getId());
 
-        if (completedLevelRetried != null && completedLevelRetried.getScore() < averageStars) {
-            completedLevelRetried.setScore(averageStars);
-            completedLevelService.updateCompletedLevel(completedLevelRetried);
+        if (completedLevelRetried != null) {
+            if (completedLevelRetried.getScore() < averageStars) {
+                completedLevelRetried.setScore(averageStars);
+                completedLevelService.updateCompletedLevel(completedLevelRetried);
+            }
         } else {
             CompletedLevel completedLevel = new CompletedLevel();
             completedLevel.setLevel(gameSessionManager.getLevelSelected());

@@ -12,6 +12,8 @@ public class Main {
         GameSessionController gameSessionController = new GameSessionController();
 
         UserInterface ui = new UserInterface(gameController, gameSessionController);
-        ui.start();
+        while (true) {
+            ui.start();
+        }
     }
 }
