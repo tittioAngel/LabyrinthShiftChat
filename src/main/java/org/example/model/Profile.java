@@ -31,6 +31,7 @@ public class Profile {
     public Profile(final String username, final String password) {
         this.username = username;
         this.password = password;
+        this.completedLevels = new ArrayList<>();
     }
 
     public void addCompletedLevel(final CompletedLevel completedLevel) {
@@ -40,16 +41,4 @@ public class Profile {
         this.completedLevels.add(completedLevel);
     }
 
-
-
-    /**
-     * Metodo per contare quanti livelli sono stati completati
-     * @return int, se la lista di livelli completati è vuota torna 0
-     */
-    public int getCompletedLevelsCount() {
-        if (this.completedLevels == null) {
-            return 0;
-        }
-        return this.completedLevels.size();
-    }
 }
