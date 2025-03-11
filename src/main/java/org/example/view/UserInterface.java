@@ -162,11 +162,10 @@ public class UserInterface {
 
     public boolean manageStoryMode() {
         boolean stayInStoryMode = true;
-
         while (stayInStoryMode) {
             showUserProfile(gameSessionManager.getProfile());
             System.out.println("\n🎮 Benvenuto nella Modalità Storia! \n📜 Scegli il livello da giocare:");
-            System.out.println("1️⃣  Gioca il prossimo livello [Livello " + (gameSessionManager.getProfile().getCompletedLevels().size() + 1) + "]");
+            System.out.println("1️⃣  Gioca il prossimo livello [Livello " + (gameSessionManager.getProfile().getCompletedLevelsCount()+1) + "]");
             System.out.println("2️⃣  Riprova uno dei livelli precedenti");
             System.out.println("3️⃣  Esci dal gioco");
             System.out.println("4️⃣  Torna al menu di scelta della modalità di gioco");
