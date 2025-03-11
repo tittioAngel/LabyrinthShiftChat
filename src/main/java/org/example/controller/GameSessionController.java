@@ -60,17 +60,7 @@ public class GameSessionController {
     }
 
     public void saveCompletedLevel(int averageStars) {
-        CompletedLevel completedLevel = new CompletedLevel();
-        completedLevel.setLevel(gameSessionManager.getLevelSelected());
-        completedLevel.setScore(averageStars);
-        completedLevel.setProfile(gameSessionManager.getProfile());
-
-        completedLevelService.save(completedLevel);
-
-        gameSessionManager.getProfile().addCompletedLevel(completedLevel);
-
-        profileService.updateProfile(gameSessionManager.getProfile());
-
+        gameSessionService.manageSaveCompletedLevel(averageStars);
     }
 
 

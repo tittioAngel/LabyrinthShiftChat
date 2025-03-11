@@ -2,9 +2,6 @@ package org.example.service;
 
 import org.example.dao.*;
 import org.example.model.*;
-import org.example.model.entities.Adversity;
-import org.example.model.tiles.ExitTile;
-import org.example.model.tiles.Wall;
 import org.example.singleton.GameSessionManager;
 
 
@@ -12,8 +9,8 @@ public class GameSessionService {
     private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
     private final GameSessionDAO gameSessionDAO = new GameSessionDAO();
     private final MazeService mazeService = new MazeService();
-    private final ScoringService scoringService = new ScoringService();
-    public static final int EXIT_REACHED = 1;
+    private final CompletedLevelService completedLevelService = new CompletedLevelService();
+    private final ProfileService profileService = new ProfileService();
 
     public void createOrRegenerateMazeInGameSession(boolean isRegeneration) {
         System.out.println(isRegeneration ? "🔄 Rigenerazione del minimaze in corso..." : "");
@@ -43,6 +40,23 @@ public class GameSessionService {
         gameSessionDAO.save(gameSession);
     }
 
+    public void manageSaveCompletedLevel(int averageStars) {
+        CompletedLevel completedLevelRetried = completedLevelService.getLevelRetried(gameSessionManager.getLevelSelected().getId(), gameSessionManager.getProfile().getId());
+
+        if (completedLevelRetried != null && completedLevelRetried.getScore() < averageStars) {
+            completedLevelRetried.setScore(averageStars);
+            completedLevelService.updateCompletedLevel(completedLevelRetried);
+        } else {
+            CompletedLevel completedLevel = new CompletedLevel();
+            completedLevel.setLevel(gameSessionManager.getLevelSelected());
+            completedLevel.setScore(averageStars);
+            completedLevel.setProfile(gameSessionManager.getProfile());
+
+            completedLevelService.save(completedLevel);
+            gameSessionManager.getProfile().addCompletedLevel(completedLevel);
+            profileService.updateProfile(gameSessionManager.getProfile());
+        }
+    }
 
 
 }
