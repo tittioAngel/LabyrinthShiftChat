@@ -29,26 +29,26 @@
         <property name="hibernate.c3p0.max_statements">50</property>
 
         <!-- Mappatura delle entità -->
-        <mapping class="org.labirynthShiftChat.model.Profile"/>
-        <mapping class="org.labirynthShiftChat.model.CompletedLevel"/>
-        <mapping class="org.labirynthShiftChat.model.Maze"/>
-        <mapping class="org.labirynthShiftChat.model.Tile"/>
-        <mapping class="org.labirynthShiftChat.model.GameSession"/>
-        <mapping class="org.labirynthShiftChat.model.DifficultyLevel"/>
+        <mapping class="org.labyrinthShiftChat.model.Profile"/>
+        <mapping class="org.labyrinthShiftChat.model.CompletedLevel"/>
+        <mapping class="org.labyrinthShiftChat.model.Maze"/>
+        <mapping class="org.labyrinthShiftChat.model.Tile"/>
+        <mapping class="org.labyrinthShiftChat.model.GameSession"/>
+        <mapping class="org.labyrinthShiftChat.model.DifficultyLevel"/>
 
-        <mapping class="org.labirynthShiftChat.model.tiles.Corridor"/>
-        <mapping class="org.labirynthShiftChat.model.tiles.Wall"/>
-        <mapping class="org.labirynthShiftChat.model.tiles.ExitTile"/>
-        <mapping class="org.labirynthShiftChat.model.tiles.StartTile"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.Corridor"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.Wall"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.ExitTile"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.StartTile"/>
 
-        <mapping class="org.labirynthShiftChat.model.entities.Adversity" />
-        <mapping class="org.labirynthShiftChat.model.entities.Thorns"/>
-        <mapping class="org.labirynthShiftChat.model.entities.FreezingFog"/>
-        <mapping class="org.labirynthShiftChat.model.entities.Slime"/>
-        <mapping class="org.labirynthShiftChat.model.entities.TimeVortex"/>
-        <mapping class="org.labirynthShiftChat.model.entities.PhantomHorse"/>
-        <mapping class="org.labirynthShiftChat.model.entities.ShadowDemon"/>
-        <mapping class="org.labirynthShiftChat.model.entities.IceCyclops"/>
+        <mapping class="org.labyrinthShiftChat.model.entities.Adversity" />
+        <mapping class="org.labyrinthShiftChat.model.entities.Thorns"/>
+        <mapping class="org.labyrinthShiftChat.model.entities.FreezingFog"/>
+        <mapping class="org.labyrinthShiftChat.model.entities.Slime"/>
+        <mapping class="org.labyrinthShiftChat.model.entities.TimeVortex"/>
+        <mapping class="org.labyrinthShiftChat.model.entities.PhantomHorse"/>
+        <mapping class="org.labyrinthShiftChat.model.entities.ShadowDemon"/>
+        <mapping class="org.labyrinthShiftChat.model.entities.IceCyclops"/>
 
 
 
