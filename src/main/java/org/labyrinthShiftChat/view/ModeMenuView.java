@@ -7,6 +7,11 @@ import org.labyrinthShiftChat.model.GameMode;
 public class ModeMenuView extends BaseView {
 
     @Override
+    public void print(String message) {
+
+    }
+
+    @Override
     public void show() {
         System.out.println("\n🎮 Scegli la modalità da giocare: ");
         int index = 1;

@@ -10,7 +10,7 @@ public class GameSessionController {
 
     private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
 
-    private final GameSessionService gameSessionService = new GameSessionService();
+    private final StoryModeService gameSessionService = new StoryModeService();
     private final GameService gameService = new GameService();
     private final MazeService mazeService = new MazeService();
     private final PlayerService playerService = new PlayerService();
@@ -24,7 +24,7 @@ public class GameSessionController {
     }
 
     public void showMiniMazePreview() {
-        mazeService.previewMiniMaze(gameSessionManager.getGameSession().getMaze());
+        mazeService.createPreviewMiniMaze(gameSessionManager.getGameSession().getMaze());
     }
 
     public void regenerateMiniMaze() {
@@ -32,7 +32,7 @@ public class GameSessionController {
     }
 
     public void showLimitedMiniMazeView() {
-        mazeService.displayLimitedView(gameSessionManager.getGameSession().getMaze(),
+        mazeService.createLimitedView(gameSessionManager.getGameSession().getMaze(),
                 gameSessionManager.getGameSession().getCurrentTile().getX(),
                 gameSessionManager.getGameSession().getCurrentTile().getY());
     }

@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 public class AccessMenuView extends BaseView {
 
     @Override
+    public void print(String message) {
+
+    }
+
+    @Override
     public void show() {
         System.out.println("1️⃣  Accedi");
         System.out.println("2️⃣  Crea Nuovo Profilo");

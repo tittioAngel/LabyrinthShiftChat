@@ -13,6 +13,11 @@ public class ProfileView extends BaseView {
     private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
 
     @Override
+    public void print(String message) {
+
+    }
+
+    @Override
     public void show() {
         Profile profile = gameSessionManager.getProfile();
         System.out.println("\n------------------------------------------------------");

@@ -5,7 +5,7 @@ import org.labyrinthShiftChat.model.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 
 
-public class GameSessionService {
+public class StoryModeService {
     private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
     private final GameSessionDAO gameSessionDAO = new GameSessionDAO();
     private final MazeService mazeService = new MazeService();

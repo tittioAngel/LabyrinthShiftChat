@@ -22,7 +22,7 @@ public class GameController {
     private final AccessMenuView accessMenuView = new AccessMenuView();
     private final ModeMenuView modeMenuView = new ModeMenuView();
 
-    public void startGame() {
+    public void startGame() throws InterruptedException {
         System.out.println("🎮 Benvenuto in LabyrinthShiftChat! 🎮");
         int i = 0;
         Profile profile = null;
@@ -44,7 +44,7 @@ public class GameController {
         }
 
         int levelSelected = 0;
-        while (levelSelected == 0) {
+        while (gameSessionManager.isLoggedIn()) {
 
             modeMenuView.show();
 
@@ -62,6 +62,9 @@ public class GameController {
                 stopGame();
             } else {
                 levelSelected = manageSelectedMode(GameMode.values()[modeChoice - 1]);
+                int stars= storyModeController.playLevel(levelSelected);
+                storyModeController.manageEndLevel(stars);
+
             }
         }
     }
@@ -80,6 +83,7 @@ public class GameController {
     public void stopGame() {
         gameService.stopGame();
     }
+
 
 
 }

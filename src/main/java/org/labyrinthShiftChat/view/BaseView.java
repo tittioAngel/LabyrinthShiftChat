@@ -32,5 +32,6 @@ public abstract class BaseView {
         }
     }
 
+    public abstract void print(String message);
     public abstract void show();
 }

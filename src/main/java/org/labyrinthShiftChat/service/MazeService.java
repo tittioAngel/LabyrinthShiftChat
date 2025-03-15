@@ -14,6 +14,7 @@ public class MazeService {
     private final TileDAO tileDAO = new TileDAO();
     private final MazeGenerator mazeGenerator = new MazeGenerator(); // ✅ Usa l'algoritmo DFS
 
+    //questo resta qua
     public Maze generateRandomMaze(DifficultyLevel difficulty) {
         // Genera un minimaze risolvibile con un percorso valido
         Maze maze = mazeGenerator.generateMaze(difficulty);
@@ -28,14 +29,11 @@ public class MazeService {
         // Aggiungiamo ostacoli ed enemy
         addAdversities(maze);
 
-//        System.out.println("✅ Minimaze di livello " + difficulty.name() + " generato con successo!");
-//        System.out.println("📍 Posizione di partenza: (0, 0)");
-//        System.out.println("🏁 Uscita posizionata in (" + (difficulty.getMazeSize() - 1) + ", " + (difficulty.getMazeSize() - 1) + ")");
-
         return maze;
     }
 
-    public void displayMaze(Maze maze) {
+
+    public char[][] displayMaze(Maze maze) {
         List<Tile> tiles = tileDAO.findAllTilesByMaze(maze.getId());
         List<Adversity> adversities = new AdversityDAO().findAllByMaze(maze.getId());
         int size = maze.getSize();
@@ -70,17 +68,20 @@ public class MazeService {
             }
         }
 
-        // Stampa la griglia
-        System.out.println("\n🔍 Pre-visualizzazione del labirinto:");
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                System.out.print(grid[x][y] + " ");
-            }
-            System.out.println();
-        }
+        return grid;
+
+        //SOLO QUESTA PARTE DEVE ESSERE NELLA VIEW
+//        // Stampa la griglia
+//        System.out.println("\n🔍 Pre-visualizzazione del labirinto:");
+//        for (int y = 0; y < size; y++) {
+//            for (int x = 0; x < size; x++) {
+//                System.out.print(grid[x][y] + " ");
+//            }
+//            System.out.println();
+//        }
     }
 
-    public void displayLimitedView(Maze maze, int playerX, int playerY) {
+    public char[][] createLimitedView(Maze maze, int playerX, int playerY) {
         List<Tile> tiles = tileDAO.findAllTilesByMaze(maze.getId());
         int size = maze.getSize();
         char[][] grid = new char[size][size];
@@ -109,14 +110,15 @@ public class MazeService {
         // Segna la posizione del giocatore con 'G'
         grid[playerX][playerY] = 'G';
 
-        // Stampa la griglia limitata
-        System.out.println("\n👀 Vista limitata del labirinto:");
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                System.out.print(grid[x][y] + " ");
-            }
-            System.out.println();
-        }
+//        // Stampa la griglia limitata
+//        System.out.println("\n👀 Vista limitata del labirinto:");
+//        for (int y = 0; y < size; y++) {
+//            for (int x = 0; x < size; x++) {
+//                System.out.print(grid[x][y] + " ");
+//            }
+//            System.out.println();
+//        }
+        return grid;
     }
 
     private void addAdversities(Maze maze) {
@@ -233,19 +235,19 @@ public class MazeService {
         throw new IllegalStateException("Nessuna posizione di partenza trovata nel labirinto!");
     }
 
-    public void previewMiniMaze(Maze maze) {
+    public char[][] createPreviewMiniMaze(Maze maze) {
         System.out.println("🔍 Visualizzazione completa del labirinto per " + maze.getDifficulty().getPreviewTime() + " secondi:");
 
-        // Mostriamo il labirinto intero
-        displayMaze(maze);
+        // mi faccio ridare la griglia
+         return displayMaze(maze);
 
-        try {
-            Thread.sleep(maze.getDifficulty().getPreviewTime() * 1000L); // Attesa per la previsualizzazione
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+//        try {
+//            Thread.sleep(maze.getDifficulty().getPreviewTime() * 1000L); // Attesa per la previsualizzazione
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
 
-        System.out.println("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
+//        System.out.println("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
     }
 
 
