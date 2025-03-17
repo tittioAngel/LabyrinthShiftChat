@@ -16,8 +16,8 @@ public class StoryModeView extends BaseView {
         System.out.println(message);
     }
 
-    @Override
-    public void show() {
+
+    public void showStoryModeMenu() {
         System.out.println("\n🎮 Benvenuto nella Modalità Storia! \n📜 Scegli il livello da giocare:");
         System.out.println("1️⃣  Gioca il prossimo livello [Livello " + (!gameSessionManager.getProfile().getCompletedLevels().isEmpty() ? (gameSessionManager.getProfile().getCompletedLevels().size() + 1) : 1) + "]");
         System.out.println("2️⃣  Riprova uno dei livelli precedenti");

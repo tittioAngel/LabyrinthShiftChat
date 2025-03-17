@@ -8,11 +8,10 @@ public class ModeMenuView extends BaseView {
 
     @Override
     public void print(String message) {
-
+        System.out.println(message);
     }
 
-    @Override
-    public void show() {
+    public void showModeMenu() {
         System.out.println("\n🎮 Scegli la modalità da giocare: ");
         int index = 1;
         for (GameMode mode : GameMode.values()) {

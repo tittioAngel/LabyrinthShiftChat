@@ -17,7 +17,7 @@ public class LoginController {
     private final LoginView loginView = new LoginView();
 
     public HashMap<String, String> retrieveCredentials() {
-        loginView.show();
+        loginView.print("\n📜 Inserisci le credenziali per accedere/registrarti 📜");
         HashMap<String, String> credentials = new HashMap<>();
         credentials.put("username", loginView.readStringInput("👉 Inserisci username: "));
         credentials.put("password", loginView.readStringInput("👉 Inserisci password: "));

@@ -33,84 +33,86 @@ public class StoryModeController {
 
     private static final int TOTAL_MINIMAZES = 3;
 
-    public int startStoryMode() {
+    public void startStoryMode() throws InterruptedException {
 
         boolean stayInStoryMode = true;
-        while (stayInStoryMode) {
-            profileView.show();
 
-            storyModeView.show();
+        int levelSelected = 0;
+
+        while (stayInStoryMode) {
+            profileView.showProfileInfo(gameSessionManager.getProfile());
+
+            storyModeView.showStoryModeMenu();
 
             int input;
             do {
                 input = storyModeView.readIntInput("👉 Scelta: ");
 
                 if (input < 1 || input > 4) {
-                    System.out.println("⚠️ Scelta non valida. Riprova.");
+                    storyModeView.print("⚠️ Scelta non valida. Riprova.");
                 }
             } while (input < 1 || input > 4);
 
             switch (input) {
                 case 1 -> {
-                    int levelIdentifier = gameSessionManager.getProfile().getCompletedLevels().size() + 1;
-                    gameSessionManager.setLevelSelected(levelService.findLevelByNumber(levelIdentifier));
-                    return levelIdentifier;
+                    levelSelected = gameSessionManager.getProfile().getCompletedLevels().size() + 1;
+                    gameSessionManager.setLevelSelected(levelService.findLevelByNumber(levelSelected));
+                    managePlayLevel();
                 }
                 case 2 -> {
-                    if (showRetryLevelMenu() != -1)
-                        return showRetryLevelMenu();
+                    levelSelected = showRetryLevelMenu();
+                    if (levelSelected > 0) {
+                        managePlayLevel();
+                    }
                 }
                 case 3 -> gameService.stopGame();
-                case 4 -> {
-                    stayInStoryMode = false;
-                }
-                default -> System.out.println("\n⚠️ Scelta non valida. Riprova.");
+                case 4 -> stayInStoryMode = false;
+                default -> storyModeView.print("\n⚠️ Scelta non valida. Riprova.");
             }
         }
 
-        return 0;
     }
 
     public int showRetryLevelMenu() {
         List<CompletedLevel> completedLevels = gameSessionManager.getProfile().getCompletedLevels();
 
         if (completedLevels.isEmpty()) {
-            System.out.println("\n⚠️ Non hai ancora completato alcun livello da riprovare.");
+            storyModeView.print("\n⚠️ Non hai ancora completato alcun livello da riprovare.");
             return -1;
         }
 
-        boolean stayInRetryMenu = true;
+        storyModeView.showRetryMenu();
 
-        while (stayInRetryMenu) {
-            storyModeView.showRetryMenu();
+        int levelSelected;
+        do {
+            levelSelected = storyModeView.readIntInput("👉 Inserisci il numero del livello: ");
 
-            int levelSelected;
-            do {
-                levelSelected = storyModeView.readIntInput("👉 Inserisci il numero del livello: ");
-
-                if (levelSelected < 1 || levelSelected > completedLevels.size() + 2) {
-                    System.out.println("❌ Scelta non valida. Riprova.");
-                }
-            } while (levelSelected < 1 || levelSelected > completedLevels.size() + 2);
-
-            if (levelSelected == completedLevels.size() + 2) {
-                gameService.stopGame();
-            } else if (levelSelected == completedLevels.size() + 1) {
-                stayInRetryMenu = false;
-            } else {
-                gameSessionManager.setLevelSelected(levelService.findLevelByNumber(levelSelected));
-                return levelSelected;
+            if (levelSelected < 1 || levelSelected > completedLevels.size() + 2) {
+                System.out.println("❌ Scelta non valida. Riprova.");
             }
+        } while (levelSelected < 1 || levelSelected > completedLevels.size() + 2);
+
+        if (levelSelected == completedLevels.size() + 2) {
+            gameService.stopGame();
+        } else if (levelSelected == completedLevels.size() + 1) {
+            return 0;
+        } else {
+            gameSessionManager.setLevelSelected(levelService.findLevelByNumber(levelSelected));
+            return levelSelected;
         }
         return 0;
     }
 
-    public int playLevel(int levelIdentifier) throws InterruptedException {
-        //Level level = gameSessionManager.getLevelSelected();
+    public void managePlayLevel() throws InterruptedException {
+        int starsReturned = playLevel(gameSessionManager.getLevelSelected());
+        manageEndLevel(starsReturned);
+    }
+
+    public int playLevel(Level levelSelected) throws InterruptedException {
         int miniMazeCompleted = 0;
         int totalStars = 0;
 
-        System.out.println("\n🎮 Livello selezionato: " +levelIdentifier);
+        System.out.println("\n🎮 Livello selezionato: " + levelSelected.getName());
 
         while (miniMazeCompleted < TOTAL_MINIMAZES) {
 
@@ -125,7 +127,7 @@ public class StoryModeController {
             boolean finished = false;
             while (!finished) {
 
-                 stars =playLimitedView(startTime, timeLimit);
+                 stars = playLimitedView(startTime, timeLimit);
 
                 if (stars != 0) {
                     finished = true;

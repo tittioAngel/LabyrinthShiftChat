@@ -4,11 +4,6 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class GamePlayStoryView extends BaseView{
-    @Override
-    public void show() {
-        System.out.print("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire): ");
-
-    }
 
     public void showTotalMiniMaze(char[][] grid) {
 

@@ -2,6 +2,7 @@ package org.labyrinthShiftChat.view;
 
 import lombok.NoArgsConstructor;
 import org.labyrinthShiftChat.model.CompletedLevel;
+import org.labyrinthShiftChat.model.Player;
 import org.labyrinthShiftChat.model.Profile;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 
@@ -10,16 +11,12 @@ import java.util.List;
 @NoArgsConstructor
 public class ProfileView extends BaseView {
 
-    private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
-
     @Override
     public void print(String message) {
-
+        System.out.println(message);
     }
 
-    @Override
-    public void show() {
-        Profile profile = gameSessionManager.getProfile();
+    public void showProfileInfo(Profile profile) {
         System.out.println("\n------------------------------------------------------");
         System.out.println("🎮 PROFILO UTENTE: " + profile.getUsername());
         System.out.println("------------------------------------------------------");

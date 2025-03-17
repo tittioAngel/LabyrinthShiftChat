@@ -7,12 +7,7 @@ public class LoginView extends BaseView {
 
     @Override
     public void print(String message) {
-
-    }
-
-    @Override
-    public void show() {
-        System.out.println("\n📜 Inserisci le credenziali per accedere/registrarti 📜");
+        System.out.println(message);
     }
 
     public String readStringInput(String prompt) {
