@@ -35,7 +35,7 @@ public class GamePlayStoryView extends BaseView{
 
     @Override
     public void print(String message) {
-
+        System.out.println(message);
     }
 
 

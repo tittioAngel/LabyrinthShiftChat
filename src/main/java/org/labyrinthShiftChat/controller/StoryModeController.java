@@ -88,7 +88,7 @@ public class StoryModeController {
             levelSelected = storyModeView.readIntInput("👉 Inserisci il numero del livello: ");
 
             if (levelSelected < 1 || levelSelected > completedLevels.size() + 2) {
-                System.out.println("❌ Scelta non valida. Riprova.");
+                storyModeView.print("❌ Scelta non valida. Riprova.");
             }
         } while (levelSelected < 1 || levelSelected > completedLevels.size() + 2);
 
@@ -112,7 +112,7 @@ public class StoryModeController {
         int miniMazeCompleted = 0;
         int totalStars = 0;
 
-        System.out.println("\n🎮 Livello selezionato: " + levelSelected.getName());
+        storyModeView.print("\n🎮 Livello selezionato: " + levelSelected.getName());
 
         while (miniMazeCompleted < TOTAL_MINIMAZES) {
 
@@ -137,7 +137,7 @@ public class StoryModeController {
             //int stars = managePlayerMovement();
             totalStars += stars;
 
-            System.out.println("\n🏆 Hai completato il MiniMaze " + (miniMazeCompleted + 1) + " con punteggio : " + stars + "/3");
+           storyModeView.print("\n🏆 Hai completato il MiniMaze " + (miniMazeCompleted + 1) + " con punteggio : " + stars + "/3");
 
             Thread.sleep(3000);
 
@@ -151,7 +151,7 @@ public class StoryModeController {
 
     public void previewMaze(int miniMazeCompleted) {
 
-        System.out.println("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
+        storyModeView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
         Maze maze=gameSessionManager.getGameSession().getMaze();
 
         char [][] grid= mazeService.createPreviewMiniMaze(maze);
@@ -163,11 +163,11 @@ public class StoryModeController {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        System.out.println("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
+        storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
     }
 
     public int playLimitedView(long startTime,long timeLimit) {
-        System.out.println("✅ Il gioco inizia ora con la visione limitata!");
+        storyModeView.print("✅ Il gioco inizia ora con la visione limitata!");
         long elapsedTime = System.currentTimeMillis() - startTime;
         long remainingTime = (timeLimit - elapsedTime) / 1000;
 
@@ -175,7 +175,7 @@ public class StoryModeController {
 
         // Se il tempo è scaduto, rigeneriamo il minimaze e resettare il timer
         if (remainingTime <= 0) {
-            System.out.println("⏳ Tempo scaduto! Rigenerazione del minimaze...");
+            storyModeView.print("⏳ Tempo scaduto! Rigenerazione del minimaze...");
             storyModeService.createOrRegenerateMazeInGameSession(true);
 
             // Reset del timer per il nuovo tentativo sullo stesso minimaze
@@ -189,7 +189,7 @@ public class StoryModeController {
 
         gamePlayStoryView.showLimitedMiniMaze(grid);
 
-        System.out.println("\n⏳ Tempo rimasto: " + remainingTime + " secondi.");
+        storyModeView.print("\n⏳ Tempo rimasto: " + remainingTime + " secondi.");
 
         String direction =gamePlayStoryView.readString("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire):");
 
@@ -200,7 +200,7 @@ public class StoryModeController {
 
     public int manageDirectionSelected(String direction, long startTime) {
         if (direction.equals("Q")) {
-            System.out.println("❌ Hai abbandonato la partita.");
+            storyModeView.print("❌ Hai abbandonato la partita.");
             gameService.stopGame();
         }
 
@@ -223,8 +223,8 @@ public class StoryModeController {
         int averageStars = totalStars / TOTAL_MINIMAZES;
         //Devo controllare se il livello è gia stato completato
         storyModeService.manageSaveCompletedLevel(averageStars);
-        System.out.println("\n🏆 **Complimenti! Hai completato tutti i minimaze del livello.** 🏆");
-        System.out.println("⭐ Punteggio finale medio: " + averageStars + " stelle.");
+        storyModeView.print("\n🏆 **Complimenti! Hai completato tutti i minimaze del livello.** 🏆");
+        storyModeView.print("⭐ Punteggio finale medio: " + averageStars + " stelle.");
 
         gameSessionManager.resetSession();
     }
