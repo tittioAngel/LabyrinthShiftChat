@@ -47,6 +47,7 @@ public class StoryModeService {
             if (completedLevelRetried.getScore() < averageStars) {
                 completedLevelRetried.setScore(averageStars);
                 completedLevelService.updateCompletedLevel(completedLevelRetried);
+                gameSessionManager.setProfile(profileService.refreshProfile(gameSessionManager.getProfile()));
             }
         } else {
             CompletedLevel completedLevel = new CompletedLevel();
@@ -59,6 +60,5 @@ public class StoryModeService {
             profileService.updateProfile(gameSessionManager.getProfile());
         }
     }
-
 
 }

@@ -36,4 +36,8 @@ public class ProfileService {
     public void updateProfile(Profile profile) {
         profileDAO.update(profile);
     }
+
+    public Profile refreshProfile(final Profile profile) {
+        return profileLogin(profile.getUsername(), profile.getPassword());
+    }
 }
