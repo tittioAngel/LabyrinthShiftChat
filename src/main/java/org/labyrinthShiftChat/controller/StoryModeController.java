@@ -121,7 +121,6 @@ public class StoryModeController {
 
             previewMaze(miniMazeCompleted);
 
-
             long startTime = System.currentTimeMillis(); // Avvio del timer locale
             long timeLimit = 60 * 1000; // 60 secondi in millisecondi
             int stars = 0;
@@ -130,7 +129,10 @@ public class StoryModeController {
 
                 stars = playLimitedView(startTime, timeLimit);
 
-                if (stars != 0) {
+                if (stars == -1) {
+                    previewMaze(miniMazeCompleted);
+                    startTime = System.currentTimeMillis();
+                } else if (stars != 0) {
                     finished = true;
                 }
             }
@@ -150,8 +152,7 @@ public class StoryModeController {
     }
 
     public void previewMaze(int miniMazeCompleted) {
-
-        storyModeView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
+        gamePlayStoryView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
         Maze maze = gameSessionManager.getGameSession().getMaze();
 
         char [][] grid = mazeService.createPreviewMiniMaze(maze);
@@ -163,23 +164,24 @@ public class StoryModeController {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+
         storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
     }
 
     public int playLimitedView(long startTime, long timeLimit) {
-        storyModeView.print("✅ Il gioco inizia ora con la visione limitata!");
         long elapsedTime = System.currentTimeMillis() - startTime;
         long remainingTime = (timeLimit - elapsedTime) / 1000;
 
-        char[][]grid ;
+        char[][]grid;
 
         // Se il tempo è scaduto, rigeneriamo il minimaze e resettare il timer
         if (remainingTime <= 0) {
-            storyModeView.print("⏳ Tempo scaduto! Rigenerazione del minimaze...");
+            storyModeView.print("\n⏳ Tempo scaduto!");
             storyModeService.createOrRegenerateMazeInGameSession(true);
 
-            // Reset del timer per il nuovo tentativo sullo stesso minimaze
-            startTime = System.currentTimeMillis();
+            return -1;
+        } else {
+            storyModeView.print("✅ Il gioco inizia ora con la visione limitata!");
         }
 
         grid = mazeService.createLimitedView(gameSessionManager.getGameSession().getMaze(),

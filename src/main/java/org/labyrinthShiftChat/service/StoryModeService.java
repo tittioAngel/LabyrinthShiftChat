@@ -27,7 +27,7 @@ public class StoryModeService {
             gameSession.setTimeRemaining(60);
             gameSessionDAO.update(gameSession);
 
-            System.out.println("✅ Nuovo minimaze pronto! Il gioco riprende con la visione limitata.");
+            System.out.println("✅ Nuovo minimaze pronto!");
 
         } else {
             gameSession = new GameSession(maze, startTile, 60);
