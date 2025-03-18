@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 public class MazeService {
     private final MazeDAO mazeDAO = new MazeDAO();
     private final TileDAO tileDAO = new TileDAO();
-    private final MazeGenerator mazeGenerator = new MazeGenerator(); // ✅ Usa l'algoritmo DFS
+    private final MazeGenerator mazeGenerator = new MazeGenerator(); //  Usa l'algoritmo DFS
 
-    //questo resta qua
+
     public Maze generateRandomMaze(DifficultyLevel difficulty) {
         // Genera un minimaze risolvibile con un percorso valido
         Maze maze = mazeGenerator.generateMaze(difficulty);
@@ -69,16 +69,6 @@ public class MazeService {
         }
 
         return grid;
-
-        //SOLO QUESTA PARTE DEVE ESSERE NELLA VIEW
-//        // Stampa la griglia
-//        System.out.println("\n🔍 Pre-visualizzazione del labirinto:");
-//        for (int y = 0; y < size; y++) {
-//            for (int x = 0; x < size; x++) {
-//                System.out.print(grid[x][y] + " ");
-//            }
-//            System.out.println();
-//        }
     }
 
     public char[][] createLimitedView(Maze maze, int playerX, int playerY) {
@@ -110,14 +100,6 @@ public class MazeService {
         // Segna la posizione del giocatore con 'G'
         grid[playerX][playerY] = 'G';
 
-//        // Stampa la griglia limitata
-//        System.out.println("\n👀 Vista limitata del labirinto:");
-//        for (int y = 0; y < size; y++) {
-//            for (int x = 0; x < size; x++) {
-//                System.out.print(grid[x][y] + " ");
-//            }
-//            System.out.println();
-//        }
         return grid;
     }
 
@@ -241,13 +223,6 @@ public class MazeService {
         // mi faccio ridare la griglia
          return displayMaze(maze);
 
-//        try {
-//            Thread.sleep(maze.getDifficulty().getPreviewTime() * 1000L); // Attesa per la previsualizzazione
-//        } catch (InterruptedException e) {
-//            Thread.currentThread().interrupt();
-//        }
-
-//        System.out.println("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
     }
 
 

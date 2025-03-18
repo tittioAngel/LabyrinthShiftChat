@@ -14,7 +14,7 @@ public class ShadowDemon extends Adversity {
     }
 
     public ShadowDemon(int x, int y, Maze maze) {
-        super(x, y, maze, AdversityType.ENEMY,7);
+        super(x, y, maze, AdversityType.ENEMY,0);
     }
 
     @Override

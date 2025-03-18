@@ -12,7 +12,9 @@ import java.util.LinkedList;
 public class Player {
     private int x;
     private int y;
-    private int speed = 1;
+    private double speed = 1.0;// Velocità normale del giocatore
+    private long slowEndTime = 0; // Timestamp di fine rallentamento
+
 
     private static final int MAX_HISTORY = 5;  // Numero massimo di posizioni memorizzate
     private LinkedList<int[]> positionHistory = new LinkedList<>();
@@ -40,7 +42,22 @@ public class Player {
         if (stepsBack < positionHistory.size()) {
             return positionHistory.get(stepsBack);
         }
-        return new int[]{x, y}; // Se non ci sono abbastanza posizioni, ritorna la posizione attuale
+        return positionHistory.getLast(); // Se non ci sono abbastanza posizioni, ritorna la posizione attuale
     }
+
+    public void applySpeedEffect(long durationSec,double speed) {
+        this.speed *= speed; // Riduce o aumenta la velocità
+        slowEndTime = System.currentTimeMillis() + (durationSec*1000);
+    }
+
+    public boolean resetSpeed() {
+        if (System.currentTimeMillis() > slowEndTime) {
+            speed = 1.0; // Ripristina la velocità normale
+            return true;
+        }
+        return false;
+    }
+
+
 
 }

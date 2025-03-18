@@ -20,6 +20,7 @@ public class Thorns extends Adversity {
     @Override
     public void triggerEffect(Player player) {
         System.out.println("Hai attivato le Spine! La tua velocità è ridotta del 50% per 5 secondi.");
-        player.setSpeed(player.getSpeed()/2);
+        //player.setSpeed(player.getSpeed()/2);
+        player.applySpeedEffect(getEffectDuration(), 0.5);
     }
 }

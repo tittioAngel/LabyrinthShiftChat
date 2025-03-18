@@ -19,7 +19,9 @@ public class FreezingFog extends Adversity {
 
     @Override
     public void triggerEffect(Player player) {
-        System.out.println("Hai attivato la Nebbia Gelida! La tua velocità è ridotta di un terzo per 7 secondi e la visibilità è limitata.");
-        // Logica per rallentare il giocatore e limitare la visibilità
+        System.out.println("Hai attivato la Nebbia Gelida! La tua velocità è ridotta di un terzo per 7 secondi.");
+        // Logica per rallentare il giocatore
+        //player.setSpeed(player.getSpeed()/3);
+        player.applySpeedEffect(getEffectDuration(), 0.33);
     }
 }

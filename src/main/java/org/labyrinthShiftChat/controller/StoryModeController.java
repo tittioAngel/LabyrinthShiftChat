@@ -169,7 +169,16 @@ public class StoryModeController {
     }
 
     public int playLimitedView(long startTime, long timeLimit) {
-        long elapsedTime = System.currentTimeMillis() - startTime;
+        long elapsedTime;
+        char debug;
+        if(!gameSessionManager.getGameSession().getPlayer().resetSpeed()){
+            elapsedTime = System.currentTimeMillis() - startTime;
+            debug='y';
+        }else{
+             elapsedTime = (long) ((System.currentTimeMillis()*(1/gameSessionManager.getGameSession().getPlayer().getSpeed()))- startTime);
+             debug='n';
+        }
+
         long remainingTime = (timeLimit - elapsedTime) / 1000;
 
         char[][]grid;
@@ -190,7 +199,7 @@ public class StoryModeController {
 
         gamePlayStoryView.showMiniMaze(grid, false);
 
-        storyModeView.print("\n⏳ Tempo rimasto: " + remainingTime + " secondi");
+        storyModeView.print("\n⏳ Tempo rimasto: " + remainingTime + " secondi "+ debug + "Velocità Giocatore: "+ gameSessionManager.getGameSession().getPlayer().getSpeed());
 
         String direction = gamePlayStoryView.readString("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire): ");
 

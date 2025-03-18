@@ -35,18 +35,18 @@ public class PlayerService {
                 newTile = tileDAO.findTileByPosition(player.getX() + 1, player.getY(), gameSession.getMaze().getId());
                 break;
             default:
-                System.out.println("[DEBUG] Comando non valido: " + direction);
+                System.out.println("Comando non valido: " + direction);
                 System.out.println("❌ Direzione non valida. Usa: W, A, S, D.");
                 return null;
         }
 
         if (newTile == null) {
-            System.out.println("[DEBUG] ❌ Movimento non consentito! Sei fuori dai confini del labirinto.");
+            System.out.println("❌ Movimento non consentito! Sei fuori dai confini del labirinto.");
             return null;
         }
 
         if (newTile instanceof Wall) {
-            System.out.println("[DEBUG] 🚧 Hai colpito un muro! Non puoi passare.");
+            System.out.println("🚧 Hai colpito un muro! Non puoi passare.");
             return null;
         }
 
