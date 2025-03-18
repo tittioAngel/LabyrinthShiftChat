@@ -19,15 +19,7 @@ public class ShadowDemon extends Adversity {
 
     @Override
     public void triggerEffect(Player player) {
-        System.out.println("👹 Uno Shadow Demon ti ha avvistato! Ti insegue per " + getEffectDuration() + " secondi.");
-        for (int i = 0; i < getEffectDuration(); i++) {
-//            int[] previousPos = player.getPreviousPosition(1);
-//            player.setPosition(previousPos[0] + 1, previousPos[1]); // Si avvicina al giocatore
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        System.out.println("👹 Uno Shadow Demon ti ha colpito! Verrai Portato alla posizione di partenza");
+        player.setPosition(0,0);
     }
 }
