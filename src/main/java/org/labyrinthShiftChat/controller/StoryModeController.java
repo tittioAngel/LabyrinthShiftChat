@@ -121,8 +121,8 @@ public class StoryModeController {
 
             previewMaze(miniMazeCompleted);
 
-            long startTime = System.currentTimeMillis(); // Avvio del timer locale
-            long timeLimit = 60 * 1000; // 60 secondi in millisecondi
+            long startTime = System.currentTimeMillis();
+            long timeLimit = 60 * 1000;
             int stars = 0;
             boolean finished = false;
             while (!finished) {
@@ -145,14 +145,11 @@ public class StoryModeController {
 
             miniMazeCompleted++;
         }
-
         return totalStars;
-
-
     }
 
     public void previewMaze(int miniMazeCompleted) {
-        gamePlayStoryView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
+        gamePlayStoryView.print("\n🌀 Inizio MiniMaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
         Maze maze = gameSessionManager.getGameSession().getMaze();
 
         char [][] grid = mazeService.createPreviewMiniMaze(maze);
@@ -160,23 +157,23 @@ public class StoryModeController {
         gamePlayStoryView.showMiniMaze(grid, true);
 
         try {
-            Thread.sleep(maze.getDifficulty().getPreviewTime() * 1000L); // Attesa per la previsualizzazione
+            Thread.sleep(maze.getDifficulty().getPreviewTime() * 1000L);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
-        storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
+        storyModeView.print("⏳ Pre-visualizzazione terminata, il gioco sta per iniziare...");
     }
 
     public int playLimitedView(long startTime, long timeLimit) {
         long elapsedTime;
         char debug;
-        if(!gameSessionManager.getGameSession().getPlayer().resetSpeed()){
+        if (!gameSessionManager.getGameSession().getPlayer().resetSpeed()) {
             elapsedTime = System.currentTimeMillis() - startTime;
-            debug='y';
-        }else{
-             elapsedTime = (long) ((System.currentTimeMillis()*(1/gameSessionManager.getGameSession().getPlayer().getSpeed()))- startTime);
-             debug='n';
+            debug = 'y';
+        } else {
+             elapsedTime = (long) ((System.currentTimeMillis() * (1 / gameSessionManager.getGameSession().getPlayer().getSpeed())) - startTime);
+             debug = 'n';
         }
 
         long remainingTime = (timeLimit - elapsedTime) / 1000;
@@ -189,8 +186,6 @@ public class StoryModeController {
             storyModeService.createOrRegenerateMazeInGameSession(true);
 
             return -1;
-        } else {
-            storyModeView.print("✅ Il gioco inizia ora con la visione limitata!");
         }
 
         grid = mazeService.createLimitedView(gameSessionManager.getGameSession().getMaze(),
@@ -230,7 +225,6 @@ public class StoryModeController {
     public void manageEndLevel(int totalStars) {
 
         int averageStars = totalStars / TOTAL_MINIMAZES;
-        //Devo controllare se il livello è gia stato completato
         storyModeService.manageSaveCompletedLevel(averageStars);
         storyModeView.print("\n🏆 **Complimenti! Hai completato tutti i minimaze del livello.** 🏆");
         storyModeView.print("⭐ Punteggio finale medio: " + averageStars + " stelle.");

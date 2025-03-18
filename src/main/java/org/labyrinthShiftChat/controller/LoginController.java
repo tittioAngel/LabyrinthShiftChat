@@ -16,8 +16,12 @@ public class LoginController {
 
     private final LoginView loginView = new LoginView();
 
-    public HashMap<String, String> retrieveCredentials() {
-        loginView.print("\n📜 Inserisci le credenziali per accedere/registrarti 📜");
+    public HashMap<String, String> retrieveCredentials(boolean isLogin) {
+        if (isLogin) {
+            loginView.print("\n📜 Inserisci le credenziali per accedere 📜");
+        } else {
+            loginView.print("\n📜 Inserisci le credenziali per registrarti 📜");
+        }
         HashMap<String, String> credentials = new HashMap<>();
         credentials.put("username", loginView.readStringInput("👉 Inserisci username: "));
         credentials.put("password", loginView.readStringInput("👉 Inserisci password: "));
@@ -25,7 +29,7 @@ public class LoginController {
     }
 
     public Profile manageUserLogin() {
-        HashMap<String, String> credentials = retrieveCredentials();
+        HashMap<String, String> credentials = retrieveCredentials(true);
         Profile profile = profileService.profileLogin(credentials.get("username"), credentials.get("password"));
         if (profile != null) {
             gameSessionManager.setProfile(profile);
@@ -34,7 +38,7 @@ public class LoginController {
     }
 
     public Profile manageUserSignUp() {
-        HashMap<String, String> credentials = retrieveCredentials();
+        HashMap<String, String> credentials = retrieveCredentials(false);
         Profile profile = profileService.createProfile(credentials.get("username"), credentials.get("password"));
         if (profile != null) {
             gameSessionManager.setProfile(profile);
