@@ -33,8 +33,8 @@ public class RaTModeView extends BaseView{
     public void showDifficultyGame(){
         System.out.println("\n🎮 Scegli la difficoltà della tua corsa \n📜");
         int index = 1;
-        for (GameMode mode : GameMode.values()) {
-            System.out.println(index + "️⃣  " + GameMode.formatGameMode(mode));
+        for (DifficultyLevel difficultyLevel: DifficultyLevel.values()) {
+            System.out.println(index + "️⃣  " + DifficultyLevel.formatDifficulyLevel(difficultyLevel));
             index++;
         }
         System.out.println(index + "️⃣  Torna al menu' precedente");

@@ -42,4 +42,20 @@ public class ProfileView extends BaseView {
             System.out.println("------------------------------------------------------");
         }
     }
+
+
+    public void showrecordProfile(Profile profile){
+        System.out.println("\n------------------------------------------------------");
+        System.out.println("🎮 PROFILO UTENTE: " + profile.getUsername());
+        System.out.println("------------------------------------------------------");
+
+        if (profile.getRecordRat()!=null){
+            System.out.println("\n 🏆 Minimaze  Superati:"+ profile.getRecordRat());
+        }else{
+            System.out.println("\n 🏆 Minimaze  Superati: 0");
+        }
+
+
+
+    }
 }

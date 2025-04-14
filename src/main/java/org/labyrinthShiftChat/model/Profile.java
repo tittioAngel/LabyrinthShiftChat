@@ -29,7 +29,7 @@ public class Profile {
     private List<CompletedLevel> completedLevels;
 
     @Column
-    private int recordRat;
+    private Integer recordRat=0;
 
     public Profile(final String username, final String password) {
         this.username = username;

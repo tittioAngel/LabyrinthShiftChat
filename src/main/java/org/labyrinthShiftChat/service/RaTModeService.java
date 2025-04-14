@@ -44,7 +44,12 @@ public class RaTModeService {
     }
 
     public void manageSaveCompletedRaT(int minimazeComplated) {
-        int previous_record=gameSessionManager.getProfile().getRecordRat();
+        int previous_record;
+        if(gameSessionManager.getProfile().getRecordRat()!=null){
+            previous_record=gameSessionManager.getProfile().getRecordRat();
+        }else{
+            previous_record=0;
+        }
 
         if (previous_record<minimazeComplated){
             gameSessionManager.getProfile().setRecordRat(minimazeComplated);

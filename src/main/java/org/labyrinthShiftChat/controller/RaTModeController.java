@@ -34,9 +34,10 @@ public class RaTModeController {
         int levelSelected = 0;
 
         while (ratMode) {
-            profileView.showProfileInfo(gameSessionManager.getProfile());
+            //profileView.showProfileInfo(gameSessionManager.getProfile());
 
             raTModeView.showInfoRATMode();
+            profileView.showrecordProfile(gameSessionManager.getProfile());
             raTModeView.showRaTModeMenu();
 
             int input;
@@ -75,7 +76,7 @@ public class RaTModeController {
         raTModeView.showDifficultyGame();
         input=raTModeView.readIntInput("👉 Scelta: ");
 
-        DifficultyLevel difficultyLevel= DifficultyLevel.values()[input];
+        DifficultyLevel difficultyLevel= DifficultyLevel.values()[input-1];
 
 
         return difficultyLevel;
@@ -84,25 +85,41 @@ public class RaTModeController {
 
     public int playGame(DifficultyLevel difficultyLevel) throws InterruptedException {
         int miniMazeCompleted = 0;
-        boolean timeOn=true;
-
         raTModeView.print("\n🎮 Difficoltà selezionata: " + difficultyLevel);
 
-        while (timeOn) {
+
+        long startPlayTime = System.currentTimeMillis();
+        long pausedTime = 0;
+        long accomulatedTime = 0;
+        long totalLimit = 2 * 60 * 1000; // 2 minuti in ms
+
+        while ((System.currentTimeMillis()-startPlayTime-pausedTime) <totalLimit) {
 
             raTModeService.createOrRegenerateMazeInGameSession(false,difficultyLevel);
+            raTModeView.print("Tempo trascorso "+((System.currentTimeMillis() - startPlayTime - pausedTime)/1000)+" secondi");
 
+            long previewStart = System.currentTimeMillis();
             previewMaze();
+            long previewEnd = System.currentTimeMillis();
+            pausedTime += (previewEnd - previewStart); // somma durata della preview
 
-            long startTime = System.currentTimeMillis(); // Avvio del timer locale
+            long startTime = System.currentTimeMillis();// Avvio del timer locale
             long timeLimit = 60 * 1000; // 60 secondi in millisecondi
+
             int stars = 0;
+
+
             boolean finished = false;
             while (!finished) {
+
                 stars = playLimitedView(startTime, timeLimit, difficultyLevel);
 
                 if (stars == -1) {
+                    previewStart = System.currentTimeMillis();
                     previewMaze();
+                    previewEnd = System.currentTimeMillis();
+                    pausedTime += (previewEnd - previewStart);
+
                     startTime = System.currentTimeMillis();
                 } else if (stars != 0) {
                     finished = true;
@@ -115,7 +132,8 @@ public class RaTModeController {
 
             Thread.sleep(3000);
 
-            miniMazeCompleted++;
+            if((System.currentTimeMillis()-startPlayTime-pausedTime) <totalLimit)
+                miniMazeCompleted++;
         }
 
         return miniMazeCompleted;

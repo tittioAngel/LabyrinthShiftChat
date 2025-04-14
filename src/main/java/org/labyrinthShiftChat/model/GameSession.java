@@ -30,7 +30,8 @@ public class GameSession {
     @Transient
     private Player player;
 
-    @OneToOne
+    @Enumerated(EnumType.STRING)
+    @Column(name = "game_mode")
     private GameMode gameMode;
 
     public GameSession(Maze maze, Tile startTile, int timeRemaining) {
