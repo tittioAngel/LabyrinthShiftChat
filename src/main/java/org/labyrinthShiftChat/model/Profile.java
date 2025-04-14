@@ -28,6 +28,9 @@ public class Profile {
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CompletedLevel> completedLevels;
 
+    @Column
+    private int recordRat;
+
     public Profile(final String username, final String password) {
         this.username = username;
         this.password = password;

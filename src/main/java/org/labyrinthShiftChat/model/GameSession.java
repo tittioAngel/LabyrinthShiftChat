@@ -30,6 +30,9 @@ public class GameSession {
     @Transient
     private Player player;
 
+    @OneToOne
+    private GameMode gameMode;
+
     public GameSession(Maze maze, Tile startTile, int timeRemaining) {
         this.maze = maze;
         this.currentTile = startTile;

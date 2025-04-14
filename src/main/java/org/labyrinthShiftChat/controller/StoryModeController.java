@@ -8,7 +8,7 @@ import org.labyrinthShiftChat.model.Tile;
 import org.labyrinthShiftChat.model.tiles.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
-import org.labyrinthShiftChat.view.GamePlayStoryView;
+import org.labyrinthShiftChat.view.GamePlayView;
 import org.labyrinthShiftChat.view.ProfileView;
 import org.labyrinthShiftChat.view.StoryModeView;
 
@@ -29,7 +29,7 @@ public class StoryModeController {
 
     private final StoryModeView storyModeView = new StoryModeView();
     private final ProfileView profileView = new ProfileView();
-    private final GamePlayStoryView gamePlayStoryView = new GamePlayStoryView();
+    private final GamePlayView gamePlayView = new GamePlayView();
 
     private static final int TOTAL_MINIMAZES = 3;
 
@@ -145,16 +145,19 @@ public class StoryModeController {
 
             miniMazeCompleted++;
         }
+
         return totalStars;
+
+
     }
 
     public void previewMaze(int miniMazeCompleted) {
-        gamePlayStoryView.print("\n🌀 Inizio MiniMaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
+        gamePlayView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
         Maze maze = gameSessionManager.getGameSession().getMaze();
 
         char [][] grid = mazeService.createPreviewMiniMaze(maze);
 
-        gamePlayStoryView.showMiniMaze(grid, true);
+        gamePlayView.showMiniMaze(grid, true);
 
         try {
             Thread.sleep(maze.getDifficulty().getPreviewTime() * 1000L);
@@ -162,18 +165,16 @@ public class StoryModeController {
             Thread.currentThread().interrupt();
         }
 
-        storyModeView.print("⏳ Pre-visualizzazione terminata, il gioco sta per iniziare...");
+        storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
     }
 
     public int playLimitedView(long startTime, long timeLimit) {
         long elapsedTime;
-        char debug;
-        if (!gameSessionManager.getGameSession().getPlayer().resetSpeed()) {
+
+        if(!gameSessionManager.getGameSession().getPlayer().resetSpeed()){
             elapsedTime = System.currentTimeMillis() - startTime;
-            debug = 'y';
-        } else {
-             elapsedTime = (long) ((System.currentTimeMillis() * (1 / gameSessionManager.getGameSession().getPlayer().getSpeed())) - startTime);
-             debug = 'n';
+        }else{
+             elapsedTime = (long) ((System.currentTimeMillis()*(1/gameSessionManager.getGameSession().getPlayer().getSpeed()))- startTime);
         }
 
         long remainingTime = (timeLimit - elapsedTime) / 1000;
@@ -192,11 +193,11 @@ public class StoryModeController {
                 gameSessionManager.getGameSession().getCurrentTile().getX(),
                 gameSessionManager.getGameSession().getCurrentTile().getY());
 
-        gamePlayStoryView.showMiniMaze(grid, false);
+        gamePlayView.showMiniMaze(grid, false);
 
-        storyModeView.print("\n⏳ Tempo rimasto: " + remainingTime + " secondi "+ debug + "Velocità Giocatore: "+ gameSessionManager.getGameSession().getPlayer().getSpeed());
+        storyModeView.print("\n⏳ Tempo rimasto: " + remainingTime + " secondi velocità Giocatore: "+ gameSessionManager.getGameSession().getPlayer().getSpeed());
 
-        String direction = gamePlayStoryView.readString("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire): ");
+        String direction = gamePlayView.readString("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire): ");
 
         return manageDirectionSelected(direction.toUpperCase(), startTime);
 
@@ -225,6 +226,7 @@ public class StoryModeController {
     public void manageEndLevel(int totalStars) {
 
         int averageStars = totalStars / TOTAL_MINIMAZES;
+        //Devo controllare se il livello è gia stato completato
         storyModeService.manageSaveCompletedLevel(averageStars);
         storyModeView.print("\n🏆 **Complimenti! Hai completato tutti i minimaze del livello.** 🏆");
         storyModeView.print("⭐ Punteggio finale medio: " + averageStars + " stelle.");

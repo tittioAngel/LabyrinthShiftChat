@@ -3,7 +3,7 @@ package org.labyrinthShiftChat.view;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class GamePlayStoryView extends BaseView{
+public class GamePlayView extends BaseView{
 
     public void showMiniMaze(char[][] grid, boolean isTotal) {
         int size = grid.length;

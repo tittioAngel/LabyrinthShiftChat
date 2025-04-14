@@ -12,6 +12,7 @@ public class GameController {
 
     private final LoginController loginController = new LoginController();
     private final StoryModeController storyModeController = new StoryModeController();
+    private final RaTModeController raTModeController = new RaTModeController();
 
     private final GameService gameService = new GameService();
 
@@ -64,6 +65,7 @@ public class GameController {
     public void manageSelectedMode(GameMode gameMode) throws InterruptedException {
         switch (gameMode) {
             case STORY_MODE -> storyModeController.startStoryMode();
+            case RAT_MODE -> raTModeController.startRATMode();
             default -> modeMenuView.print("\n⚠️ Scelta non valida. Riprova.");
         }
     }

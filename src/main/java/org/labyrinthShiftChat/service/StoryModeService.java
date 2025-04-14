@@ -25,6 +25,7 @@ public class StoryModeService {
             gameSession.setMaze(maze);
             gameSession.setCurrentTile(startTile);
             gameSession.setTimeRemaining(60);
+            gameSession.setGameMode(GameMode.STORY_MODE);
             gameSessionDAO.update(gameSession);
 
             System.out.println("✅ Nuovo minimaze pronto!");

@@ -18,6 +18,12 @@ public enum DifficultyLevel {
         this.previewTime = previewTime;
     }
 
+
+    public static String formatDifficulyLevel(DifficultyLevel difficulty) {
+        return difficulty.name().toLowerCase().replace('_', ' ').replaceFirst(".",
+                String.valueOf(difficulty.name().charAt(0)).toUpperCase());
+    }
+
     public int getMazeSize() {
         return mazeSize;
     }

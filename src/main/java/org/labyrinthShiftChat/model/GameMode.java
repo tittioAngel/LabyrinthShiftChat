@@ -1,7 +1,8 @@
 package org.labyrinthShiftChat.model;
 
 public enum GameMode {
-    STORY_MODE;
+    STORY_MODE,
+    RAT_MODE;
 
     public static String formatGameMode(GameMode mode) {
         return mode.name().toLowerCase().replace('_', ' ').replaceFirst(".",
