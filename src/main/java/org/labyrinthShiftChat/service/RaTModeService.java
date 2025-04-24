@@ -6,10 +6,10 @@ import org.labyrinthShiftChat.singleton.GameSessionManager;
 
 public class RaTModeService {
 
-    private MazeService mazeService=new MazeService();
-    private GameSessionManager gameSessionManager=GameSessionManager.getInstance();
+    private final MazeService mazeService = new MazeService();
+    private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
     private final GameSessionDAO gameSessionDAO = new GameSessionDAO();
-    private ProfileService profileService= new ProfileService();
+    private final ProfileService profileService = new ProfileService();
 
 
     public RaTModeService() {}
@@ -43,19 +43,34 @@ public class RaTModeService {
         gameSessionDAO.save(gameSession);
     }
 
-    public void manageSaveCompletedRaT(int minimazeComplated) {
-        int previous_record;
-        if(gameSessionManager.getProfile().getRecordRat()!=null){
-            previous_record=gameSessionManager.getProfile().getRecordRat();
-        }else{
-            previous_record=0;
+    public void manageSaveCompletedRaT(DifficultyLevel difficultyLevel, int miniMazeCompleted) {
+        Profile profile = gameSessionManager.getProfile();
+        int previousRecord;
+
+        switch (difficultyLevel) {
+            case EASY:
+                previousRecord = (profile.getRecordRatEasy() != null) ? profile.getRecordRatEasy() : 0;
+                if (miniMazeCompleted > previousRecord) {
+                    profile.setRecordRatEasy(miniMazeCompleted);
+                }
+                break;
+
+            case MEDIUM:
+                previousRecord = (profile.getRecordRatMedium() != null) ? profile.getRecordRatMedium() : 0;
+                if (miniMazeCompleted > previousRecord) {
+                    profile.setRecordRatMedium(miniMazeCompleted);
+                }
+                break;
+
+            case HARD:
+                previousRecord = (profile.getRecordRatHard() != null) ? profile.getRecordRatHard() : 0;
+                if (miniMazeCompleted > previousRecord) {
+                    profile.setRecordRatHard(miniMazeCompleted);
+                }
+                break;
         }
 
-        if (previous_record<minimazeComplated){
-            gameSessionManager.getProfile().setRecordRat(minimazeComplated);
-            profileService.updateProfile(gameSessionManager.getProfile());
-        }
-
+        profileService.updateProfile(profile);
     }
 
 }

@@ -8,6 +8,7 @@ import org.labyrinthShiftChat.model.Player;
 import org.labyrinthShiftChat.model.Tile;
 import org.labyrinthShiftChat.model.tiles.Wall;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
+import org.labyrinthShiftChat.util.RotatingControls;
 
 public class PlayerService {
 
@@ -16,27 +17,27 @@ public class PlayerService {
     private final TileDAO tileDAO = new TileDAO();
     private final GameSessionDAO gameSessionDAO = new GameSessionDAO();
 
-    public Tile movePlayerOnNewTile(String direction) {
+    public Tile movePlayerOnNewTile(RotatingControls.Direction direction) {
         GameSession gameSession = gameSessionManager.getGameSession();
         Player player = gameSession.getPlayer();
 
         Tile newTile;
+
         switch (direction) {
-            case "W": // SU
+            case UP:
                 newTile = tileDAO.findTileByPosition(player.getX(), player.getY() - 1, gameSession.getMaze().getId());
                 break;
-            case "S": // GIÙ
+            case DOWN:
                 newTile = tileDAO.findTileByPosition(player.getX(), player.getY() + 1, gameSession.getMaze().getId());
                 break;
-            case "A": // SINISTRA
+            case LEFT:
                 newTile = tileDAO.findTileByPosition(player.getX() - 1, player.getY(), gameSession.getMaze().getId());
                 break;
-            case "D": // DESTRA
+            case RIGHT:
                 newTile = tileDAO.findTileByPosition(player.getX() + 1, player.getY(), gameSession.getMaze().getId());
                 break;
             default:
-                System.out.println("Comando non valido: " + direction);
-                System.out.println("❌ Direzione non valida. Usa: W, A, S, D.");
+                System.out.println("❌ Direzione non valida.");
                 return null;
         }
 

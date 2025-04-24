@@ -18,7 +18,7 @@ public class ModeMenuView extends BaseView {
             System.out.println(index + "️⃣  " + GameMode.formatGameMode(mode));
             index++;
         }
-        System.out.println(index + "️⃣  Esci dal gioco");
+        System.out.println(index + "️⃣  ❌ Esci dal gioco");
     }
 
     public int readIntInput(String prompt) {

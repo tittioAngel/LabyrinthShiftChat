@@ -46,7 +46,8 @@ public class GamePlayView extends BaseView{
         }
     }
 
-    public String readString(String prompt ) {return super.readString(prompt);
+    public String readString(String prompt) {
+        return super.readString(prompt);
     }
 
     @Override

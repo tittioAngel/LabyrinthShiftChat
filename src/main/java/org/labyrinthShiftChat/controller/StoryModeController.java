@@ -8,6 +8,7 @@ import org.labyrinthShiftChat.model.Tile;
 import org.labyrinthShiftChat.model.tiles.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
+import org.labyrinthShiftChat.util.RotatingControls;
 import org.labyrinthShiftChat.view.GamePlayView;
 import org.labyrinthShiftChat.view.ProfileView;
 import org.labyrinthShiftChat.view.StoryModeView;
@@ -199,17 +200,21 @@ public class StoryModeController {
 
         String direction = gamePlayView.readString("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire): ");
 
-        return manageDirectionSelected(direction.toUpperCase(), startTime);
+        RotatingControls.Direction inputDir = RotatingControls.convertInputToDirection(direction);
+
+        return manageDirectionSelected(inputDir, startTime);
 
     }
 
-    public int manageDirectionSelected(String direction, long startTime) {
-        if (direction.equals("Q")) {
+    public int manageDirectionSelected(RotatingControls.Direction direction, long startTime) {
+        Tile newTile = null;
+
+        if (direction == null) {
             storyModeView.print("❌ Hai abbandonato la partita.");
             gameService.stopGame();
+        } else {
+            newTile = playerService.movePlayerOnNewTile(direction);
         }
-
-        Tile newTile = playerService.movePlayerOnNewTile(direction);
 
         if (newTile != null) {
             if (newTile instanceof ExitTile) {

@@ -29,7 +29,16 @@ public class Profile {
     private List<CompletedLevel> completedLevels;
 
     @Column
-    private Integer recordRat=0;
+    private Integer recordRatEasy = 0;
+
+    @Column
+    private Integer recordRatMedium = 0;
+
+    @Column
+    private Integer recordRatHard = 0;
+
+    @Column
+    private Integer recordRatExtreme = 0;
 
     public Profile(final String username, final String password) {
         this.username = username;

@@ -2,9 +2,8 @@ package org.labyrinthShiftChat.view;
 
 import lombok.NoArgsConstructor;
 import org.labyrinthShiftChat.model.CompletedLevel;
-import org.labyrinthShiftChat.model.Player;
+import org.labyrinthShiftChat.model.DifficultyLevel;
 import org.labyrinthShiftChat.model.Profile;
-import org.labyrinthShiftChat.singleton.GameSessionManager;
 
 import java.util.List;
 
@@ -44,18 +43,23 @@ public class ProfileView extends BaseView {
     }
 
 
-    public void showrecordProfile(Profile profile){
+    public void showRecordProfile(Profile profile){
         System.out.println("\n------------------------------------------------------");
         System.out.println("🎮 PROFILO UTENTE: " + profile.getUsername());
         System.out.println("------------------------------------------------------");
 
-        if (profile.getRecordRat()!=null){
-            System.out.println("\n 🏆 Minimaze  Superati:"+ profile.getRecordRat());
-        }else{
-            System.out.println("\n 🏆 Minimaze  Superati: 0");
-        }
+        System.out.println("+----------------+----------------------+");
+        System.out.println("|  Difficoltà    |     MiniLabirinti    |");
+        System.out.println("+----------------+----------------------+");
 
+        System.out.printf ("| %-14s | %-20s |\n", DifficultyLevel.EASY.getDifficultyName(), formatRecord(profile.getRecordRatEasy()));
+        System.out.printf ("| %-14s | %-20s |\n", DifficultyLevel.MEDIUM.getDifficultyName(), formatRecord(profile.getRecordRatMedium()));
+        System.out.printf ("| %-14s | %-20s |\n", DifficultyLevel.HARD.getDifficultyName(), formatRecord(profile.getRecordRatHard()));
+        System.out.printf ("| %-14s | %-20s |\n", DifficultyLevel.EXTREME.getDifficultyName(), formatRecord(profile.getRecordRatExtreme()));
+        System.out.println("+----------------+----------------------+");
+    }
 
-
+    private String formatRecord(Integer record){
+        return (record != null) ? record.toString() : "0";
     }
 }
