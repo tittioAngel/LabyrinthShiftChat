@@ -1,10 +1,7 @@
 package org.labyrinthShiftChat.controller;
 
 import lombok.NoArgsConstructor;
-import org.labyrinthShiftChat.model.CompletedLevel;
-import org.labyrinthShiftChat.model.Level;
-import org.labyrinthShiftChat.model.Maze;
-import org.labyrinthShiftChat.model.Tile;
+import org.labyrinthShiftChat.model.*;
 import org.labyrinthShiftChat.model.tiles.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
@@ -118,9 +115,11 @@ public class StoryModeController {
 
         while (miniMazeCompleted < TOTAL_MINIMAZES) {
 
-            storyModeService.createOrRegenerateMazeInGameSession(false);
+            gameService.createMazeInGameSession(levelSelected.getDifficultyLevel(), GameMode.STORY_MODE);
 
-            previewMaze(miniMazeCompleted);
+            gamePlayView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
+            gameService.previewMaze();
+            storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
 
             long startTime = System.currentTimeMillis();
             long timeLimit = 60 * 1000;
@@ -131,7 +130,11 @@ public class StoryModeController {
                 stars = playLimitedView(startTime, timeLimit);
 
                 if (stars == -1) {
-                    previewMaze(miniMazeCompleted);
+
+                    gamePlayView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
+                    gameService.previewMaze();
+                    storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
+
                     startTime = System.currentTimeMillis();
                 } else if (stars != 0) {
                     finished = true;
@@ -152,30 +155,13 @@ public class StoryModeController {
 
     }
 
-    public void previewMaze(int miniMazeCompleted) {
-        gamePlayView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
-        Maze maze = gameSessionManager.getGameSession().getMaze();
-
-        char [][] grid = mazeService.createPreviewMiniMaze(maze);
-
-        gamePlayView.showMiniMaze(grid, true);
-
-        try {
-            Thread.sleep(maze.getDifficulty().getPreviewTime() * 1000L);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
-    }
-
     public int playLimitedView(long startTime, long timeLimit) {
         long elapsedTime;
 
-        if(!gameSessionManager.getGameSession().getPlayer().resetSpeed()){
+        if (!gameSessionManager.getGameSession().getPlayer().resetSpeed()) {
             elapsedTime = System.currentTimeMillis() - startTime;
-        }else{
-             elapsedTime = (long) ((System.currentTimeMillis()*(1/gameSessionManager.getGameSession().getPlayer().getSpeed()))- startTime);
+        } else {
+             elapsedTime = (long) ((System.currentTimeMillis() * (1/gameSessionManager.getGameSession().getPlayer().getSpeed())) - startTime);
         }
 
         long remainingTime = (timeLimit - elapsedTime) / 1000;
@@ -185,7 +171,7 @@ public class StoryModeController {
         // Se il tempo è scaduto, rigeneriamo il minimaze e resettare il timer
         if (remainingTime <= 0) {
             storyModeView.print("\n⏳ Tempo scaduto!");
-            storyModeService.createOrRegenerateMazeInGameSession(true);
+            gameService.regenerateMazeInGameSession(gameSessionManager.getGameSession().getMaze().getDifficulty(), GameMode.STORY_MODE);
 
             return -1;
         }

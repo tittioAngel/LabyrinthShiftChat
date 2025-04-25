@@ -172,10 +172,14 @@ public class RaTModeController {
 
     public void manageEndGame(DifficultyLevel difficultyLevel, int minimazeCompelted) {
 
-        //Devo controllare se il minimazeComplated sono più del record precedente
-        raTModeService.manageSaveCompletedRaT(difficultyLevel, minimazeCompelted);
-        raTModeView.print("\n🏆 **Complimenti! Hai completato la modalità sfida.** 🏆");
-        raTModeView.print("⭐ Hai superato " + minimazeCompelted + " Minimaze.");
+        if (minimazeCompelted > 0) {
+            raTModeService.manageSaveCompletedRaT(difficultyLevel, minimazeCompelted);
+            raTModeView.print("\n🏆 **Complimenti! Hai completato la modalità!** 🏆");
+            raTModeView.print("⭐ Hai superato " + minimazeCompelted + " MINIMAZE in difficoltà " + difficultyLevel.getDifficultyName() );
+        } else {
+            raTModeView.print("❌ Purtroppo non sei riuscito a completare nessun MINIMAZE!");
+        }
+
 
         gameSessionManager.resetSession();
     }
