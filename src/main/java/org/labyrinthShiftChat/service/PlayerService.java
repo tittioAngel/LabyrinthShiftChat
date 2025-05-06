@@ -2,19 +2,22 @@ package org.labyrinthShiftChat.service;
 
 
 import org.labyrinthShiftChat.dao.GameSessionDAO;
+import org.labyrinthShiftChat.dao.MazeComponentDAO;
 import org.labyrinthShiftChat.dao.TileDAO;
 import org.labyrinthShiftChat.model.GameSession;
 import org.labyrinthShiftChat.model.Player;
 import org.labyrinthShiftChat.model.Tile;
-import org.labyrinthShiftChat.model.tiles.Wall;
+import org.labyrinthShiftChat.model.tiles.MazeComponent;
+import org.labyrinthShiftChat.model.tiles.common.Wall;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 import org.labyrinthShiftChat.util.RotatingControls;
 
 public class PlayerService {
 
     private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();
-    private final TileService tileService = new TileService();
+
     private final TileDAO tileDAO = new TileDAO();
+    private final MazeComponentDAO mazeComponentDAO = new MazeComponentDAO();
     private final GameSessionDAO gameSessionDAO = new GameSessionDAO();
 
     public Tile movePlayerOnNewTile(RotatingControls.Direction direction) {
@@ -46,7 +49,8 @@ public class PlayerService {
             return null;
         }
 
-        if (newTile instanceof Wall) {
+        MazeComponent mazeComponent = mazeComponentDAO.findByTile(newTile);
+        if (mazeComponent instanceof Wall) {
             System.out.println("🚧 Hai colpito un muro! Non puoi passare.");
             return null;
         }

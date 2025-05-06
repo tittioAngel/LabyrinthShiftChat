@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "completed_level")
+@Table(name = "CompletedLevel")
 @Getter
 @Setter
 @NoArgsConstructor

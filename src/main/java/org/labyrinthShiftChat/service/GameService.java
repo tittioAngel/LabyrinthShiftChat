@@ -2,7 +2,10 @@ package org.labyrinthShiftChat.service;
 
 import lombok.NoArgsConstructor;
 import org.labyrinthShiftChat.dao.GameSessionDAO;
+import org.labyrinthShiftChat.dao.MazeComponentDAO;
 import org.labyrinthShiftChat.model.*;
+import org.labyrinthShiftChat.model.tiles.MazeComponent;
+import org.labyrinthShiftChat.model.tiles.common.StartTile;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 import org.labyrinthShiftChat.view.GamePlayView;
 
@@ -33,14 +36,14 @@ public class GameService {
         System.out.println(isRegeneration ? "🔄 Rigenerazione del minimaze in corso..." : "");
 
         Maze maze = mazeService.generateRandomMaze(difficultyLevel);
-        Tile startTile = mazeService.getStartTile(maze);
+        StartTile startTile = mazeService.getStartTile(maze);
 
         GameSession gameSession;
         if (isRegeneration) {
             gameSession = gameSessionManager.getGameSession();
-            gameSession.getPlayer().setPosition(startTile.getX(), startTile.getY());
+            gameSession.getPlayer().setPosition(startTile.getTile().getX(), startTile.getTile().getY());
             gameSession.setMaze(maze);
-            gameSession.setCurrentTile(startTile);
+            gameSession.setCurrentTile(startTile.getTile());
             gameSession.setTimeRemaining(60);
             gameSession.setGameMode(gameMode);
             gameSessionDAO.update(gameSession);
@@ -48,7 +51,7 @@ public class GameService {
             System.out.println("✅ Nuovo minimaze pronto!");
 
         } else {
-            gameSession = new GameSession(maze, startTile, 60);
+            gameSession = new GameSession(maze, startTile.getTile(), 60);
             saveGameSession(gameSession);
             gameSessionManager.setGameSession(gameSession);
         }

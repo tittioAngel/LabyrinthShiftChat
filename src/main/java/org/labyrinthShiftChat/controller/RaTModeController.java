@@ -2,9 +2,9 @@ package org.labyrinthShiftChat.controller;
 
 import org.labyrinthShiftChat.model.DifficultyLevel;
 import org.labyrinthShiftChat.model.GameMode;
-import org.labyrinthShiftChat.model.Maze;
 import org.labyrinthShiftChat.model.Tile;
-import org.labyrinthShiftChat.model.tiles.ExitTile;
+import org.labyrinthShiftChat.model.tiles.MazeComponent;
+import org.labyrinthShiftChat.model.tiles.common.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 import org.labyrinthShiftChat.util.GameTimer;
@@ -158,10 +158,11 @@ public class RaTModeController {
             Tile newTile = playerService.movePlayerOnNewTile(actualDir);
 
             if (newTile != null) {
-                if (newTile instanceof ExitTile) {
+                MazeComponent mazeComponent = mazeService.findMazeComponentByTile(newTile);
+                if (mazeComponent instanceof ExitTile) {
                     return true;
                 } else {
-                    tileService.checkTileEffects(gameSessionManager.getGameSession(), gameSessionManager.getGameSession().getPlayer());
+                    tileService.checkTileEffects();
                 }
             }
 

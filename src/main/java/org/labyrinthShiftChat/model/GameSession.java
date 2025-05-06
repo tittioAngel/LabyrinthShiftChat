@@ -7,7 +7,7 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "game_sessions")
+@Table(name = "GameSession")
 @Getter
 @Setter
 @NoArgsConstructor

@@ -1,7 +1,6 @@
 package org.labyrinthShiftChat.config;
 
 import org.labyrinthShiftChat.model.*;
-import org.labyrinthShiftChat.model.entities.Adversity;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -17,7 +16,6 @@ public class HibernateUtil {
                     .addAnnotatedClass(Level.class)
                     .addAnnotatedClass(Maze.class)
                     .addAnnotatedClass(Tile.class)
-                    .addAnnotatedClass(Adversity.class)
                     .addAnnotatedClass(GameSession.class)
                     .addAnnotatedClass(CompletedLevel.class)
                     .buildSessionFactory();

@@ -2,7 +2,7 @@ package org.labyrinthShiftChat.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import org.labyrinthShiftChat.model.tiles.Corridor;
+import org.labyrinthShiftChat.model.tiles.common.Corridor;
 import org.labyrinthShiftChat.model.Tile;
 import org.hibernate.Session;
 import org.labyrinthShiftChat.config.HibernateUtil;

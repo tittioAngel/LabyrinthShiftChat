@@ -1,20 +1,19 @@
-package org.labyrinthShiftChat.model.entities;
+package org.labyrinthShiftChat.model.tiles.obstacle;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import org.labyrinthShiftChat.model.Maze;
+import lombok.NoArgsConstructor;
 import org.labyrinthShiftChat.model.Player;
+import org.labyrinthShiftChat.model.Tile;
+import org.labyrinthShiftChat.model.tiles.MazeComponent;
 
 @Entity
 @DiscriminatorValue("TimeVortex")
-public class TimeVortex extends Adversity {
+@NoArgsConstructor
+public class TimeVortex extends MazeComponent {
 
-    public TimeVortex() {
-        super();
-    }
-
-    public TimeVortex(int x, int y, Maze maze) {
-        super(x, y, maze, AdversityType.OBSTACLE,0);
+    public TimeVortex(Tile tile) {
+        super(tile, true);
     }
 
     @Override

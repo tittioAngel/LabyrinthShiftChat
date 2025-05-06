@@ -1,24 +1,26 @@
-package org.labyrinthShiftChat.model.entities;
+package org.labyrinthShiftChat.model.tiles.enemy;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import org.labyrinthShiftChat.model.Maze;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.labyrinthShiftChat.model.Player;
+import org.labyrinthShiftChat.model.Tile;
+import org.labyrinthShiftChat.model.tiles.MazeComponent;
 
 @Entity
 @DiscriminatorValue("IceCyclops")
-public class IceCyclops extends Adversity {
+@Getter
+@NoArgsConstructor
+public class IceCyclops extends MazeComponent {
 
-    public IceCyclops() {
-        super();
-    }
+    private final int effectDuration = 5;
 
-    public IceCyclops(int x, int y, Maze maze) {
-        super(x, y, maze, AdversityType.ENEMY,5);
+    public IceCyclops(Tile tile) {
+        super(tile, true);
     }
 
     @Override
-
     public void triggerEffect(Player player) {
         System.out.println("❄️ Un Ice Cyclops genera Nebbia Gelida! La tua velocità è ridotta per " + getEffectDuration() + " secondi.");
         //player.setSpeed(player.getSpeed()/3);

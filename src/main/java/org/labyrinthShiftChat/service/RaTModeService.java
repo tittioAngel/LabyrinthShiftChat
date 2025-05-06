@@ -6,7 +6,6 @@ import org.labyrinthShiftChat.model.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 
 @AllArgsConstructor
-@NoArgsConstructor
 public class RaTModeService {
 
     private final GameSessionManager gameSessionManager = GameSessionManager.getInstance();

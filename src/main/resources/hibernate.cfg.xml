@@ -34,23 +34,25 @@
         <mapping class="org.labyrinthShiftChat.model.Maze"/>
         <mapping class="org.labyrinthShiftChat.model.Tile"/>
         <mapping class="org.labyrinthShiftChat.model.GameSession"/>
-        <mapping class="org.labyrinthShiftChat.model.DifficultyLevel"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.MazeComponent"/>
 
-        <mapping class="org.labyrinthShiftChat.model.tiles.Corridor"/>
-        <mapping class="org.labyrinthShiftChat.model.tiles.Wall"/>
-        <mapping class="org.labyrinthShiftChat.model.tiles.ExitTile"/>
-        <mapping class="org.labyrinthShiftChat.model.tiles.StartTile"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.common.StartTile"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.common.ExitTile"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.common.Corridor"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.common.Wall"/>
 
-        <mapping class="org.labyrinthShiftChat.model.entities.Adversity" />
-        <mapping class="org.labyrinthShiftChat.model.entities.Thorns"/>
-        <mapping class="org.labyrinthShiftChat.model.entities.FreezingFog"/>
-        <mapping class="org.labyrinthShiftChat.model.entities.Slime"/>
-        <mapping class="org.labyrinthShiftChat.model.entities.TimeVortex"/>
-        <mapping class="org.labyrinthShiftChat.model.entities.PhantomHorse"/>
-        <mapping class="org.labyrinthShiftChat.model.entities.ShadowDemon"/>
-        <mapping class="org.labyrinthShiftChat.model.entities.IceCyclops"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.enemy.IceCyclops"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.enemy.PhantomHorse"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.enemy.ShadowDemon"/>
 
+        <mapping class="org.labyrinthShiftChat.model.tiles.obstacle.FreezingFog"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.obstacle.Slime"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.obstacle.Thorns"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.obstacle.TimeVortex"/>
 
+        <mapping class="org.labyrinthShiftChat.model.tiles.powerUp.ChronoCrystal"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.powerUp.SightOrb"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.powerUp.TrapNullifier"/>
 
     </session-factory>
 </hibernate-configuration>

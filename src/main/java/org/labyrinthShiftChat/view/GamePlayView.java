@@ -30,13 +30,16 @@ public class GamePlayView extends BaseView{
                         System.out.print("🚪 "); // Uscita
                         break;
                     case 'G':
-                        System.out.print("👾 "); // Giocatore
+                        System.out.print("🧑‍ "); // Giocatore (stile primo piano)
                         break;
                     case '#':
                         System.out.print("🧱 "); // Muro
                         break;
                     case '.':
                         System.out.print("⬜ "); // Corridoio
+                        break;
+                    case 'P':
+                        System.out.print("✨ "); // Power-up generico
                         break;
                     default:
                         System.out.print(symbol + " "); // Per altri caratteri, se ce ne sono

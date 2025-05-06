@@ -1,20 +1,19 @@
-package org.labyrinthShiftChat.model.entities;
+package org.labyrinthShiftChat.model.tiles.enemy;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import org.labyrinthShiftChat.model.Maze;
+import lombok.NoArgsConstructor;
 import org.labyrinthShiftChat.model.Player;
+import org.labyrinthShiftChat.model.Tile;
+import org.labyrinthShiftChat.model.tiles.MazeComponent;
 
 @Entity
 @DiscriminatorValue("ShadowDemon")
-public class ShadowDemon extends Adversity {
+@NoArgsConstructor
+public class ShadowDemon extends MazeComponent {
 
-    public ShadowDemon() {
-        super();
-    }
-
-    public ShadowDemon(int x, int y, Maze maze) {
-        super(x, y, maze, AdversityType.ENEMY,0);
+    public ShadowDemon(Tile tile) {
+        super(tile, true);
     }
 
     @Override

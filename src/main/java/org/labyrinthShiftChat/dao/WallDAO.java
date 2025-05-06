@@ -1,6 +1,6 @@
 package org.labyrinthShiftChat.dao;
 
-import org.labyrinthShiftChat.model.tiles.Wall;
+import org.labyrinthShiftChat.model.tiles.common.Wall;
 import org.hibernate.Session;
 import org.labyrinthShiftChat.config.HibernateUtil;
 

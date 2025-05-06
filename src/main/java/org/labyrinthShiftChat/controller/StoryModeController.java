@@ -2,7 +2,8 @@ package org.labyrinthShiftChat.controller;
 
 import lombok.NoArgsConstructor;
 import org.labyrinthShiftChat.model.*;
-import org.labyrinthShiftChat.model.tiles.ExitTile;
+import org.labyrinthShiftChat.model.tiles.MazeComponent;
+import org.labyrinthShiftChat.model.tiles.common.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 import org.labyrinthShiftChat.util.RotatingControls;
@@ -203,11 +204,12 @@ public class StoryModeController {
         }
 
         if (newTile != null) {
-            if (newTile instanceof ExitTile) {
+            MazeComponent mazeComponent = mazeService.findMazeComponentByTile(newTile);
+            if (mazeComponent instanceof ExitTile) {
                 long totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000;
                 return scoringService.computeStars(totalTimeSeconds);
             } else {
-                tileService.checkTileEffects(gameSessionManager.getGameSession(), gameSessionManager.getGameSession().getPlayer());
+                tileService.checkTileEffects();
             }
         }
 

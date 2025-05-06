@@ -2,41 +2,48 @@ package org.labyrinthShiftChat.service;
 
 import org.labyrinthShiftChat.dao.*;
 import org.labyrinthShiftChat.model.*;
-import org.labyrinthShiftChat.model.entities.*;
+import org.labyrinthShiftChat.model.tiles.common.Corridor;
+import org.labyrinthShiftChat.model.tiles.common.ExitTile;
+import org.labyrinthShiftChat.model.tiles.common.StartTile;
+import org.labyrinthShiftChat.model.tiles.common.Wall;
+import org.labyrinthShiftChat.model.tiles.enemy.*;
 import org.labyrinthShiftChat.model.tiles.*;
+import org.labyrinthShiftChat.model.tiles.obstacle.FreezingFog;
+import org.labyrinthShiftChat.model.tiles.obstacle.Slime;
+import org.labyrinthShiftChat.model.tiles.obstacle.Thorns;
+import org.labyrinthShiftChat.model.tiles.obstacle.TimeVortex;
+import org.labyrinthShiftChat.model.tiles.powerUp.ChronoCrystal;
+import org.labyrinthShiftChat.model.tiles.powerUp.SightOrb;
+import org.labyrinthShiftChat.model.tiles.powerUp.TrapNullifier;
+import org.labyrinthShiftChat.util.MazeGenerator;
 
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class MazeService {
+
+    private final TileService tileService = new TileService();
+
     private final MazeDAO mazeDAO = new MazeDAO();
     private final TileDAO tileDAO = new TileDAO();
+    private final MazeComponentDAO mazeComponentDAO = new MazeComponentDAO();
+
     private final MazeGenerator mazeGenerator = new MazeGenerator(); //  Usa l'algoritmo DFS
 
-
     public Maze generateRandomMaze(DifficultyLevel difficulty) {
-        // Genera un minimaze risolvibile con un percorso valido
         Maze maze = mazeGenerator.generateMaze(difficulty);
-        mazeDAO.save(maze);
-
-        // Salva ogni tile nel database
-        for (Tile tile : maze.getTiles()) {
-            tile.setMaze(maze);// Assicura che la tile sia collegata a un Maze già salvato
-            tileDAO.merge(tile);
-        }
-
-        // Aggiungiamo ostacoli ed enemy
-        addAdversities(maze);
+        addMazeComponents(maze);
 
         return maze;
     }
 
+    public MazeComponent findMazeComponentByTile(Tile tile) {
+        return mazeComponentDAO.findByTile(tile);
+    }
 
     public char[][] displayMaze(Maze maze) {
         List<Tile> tiles = tileDAO.findAllTilesByMaze(maze.getId());
-        List<Adversity> adversities = new AdversityDAO().findAllByMaze(maze.getId());
-        int size = maze.getSize();
+        int size = maze.getDifficulty().getMazeSize();
         char[][] grid = new char[size][size];
 
         // Inizializza la griglia con caratteri vuoti
@@ -46,25 +53,22 @@ public class MazeService {
             }
         }
 
-        // Riempie la griglia con le tile
         for (Tile tile : tiles) {
-            if (tile instanceof Wall) {
+            MazeComponent component = findMazeComponentByTile(tile);
+            if (component instanceof Wall) {
                 grid[tile.getX()][tile.getY()] = '#';  // Muri come #
-            } else if (tile instanceof Corridor) {
+            } else if (component instanceof Corridor) {
                 grid[tile.getX()][tile.getY()] = '.';  // Corridoi come .
-            } else if (tile instanceof ExitTile) {
+            } else if (component instanceof ExitTile) {
                 grid[tile.getX()][tile.getY()] = 'E';  // Uscita come E
-            } else if (tile instanceof StartTile) {
+            } else if (component instanceof StartTile) {
                 grid[tile.getX()][tile.getY()] = 'S';  // Inizio come S
-            }
-        }
-
-        // Posiziona i nemici e ostacoli
-        for (Adversity adversity : adversities) {
-            if (adversity.getAdversityType() == AdversityType.ENEMY) {
-                grid[adversity.getX()][adversity.getY()] = 'N'; // Nemici
-            } else {
-                grid[adversity.getX()][adversity.getY()] = 'O'; // Ostacoli
+            } else if (component instanceof IceCyclops || component instanceof PhantomHorse || component instanceof ShadowDemon) {
+                grid[tile.getX()][tile.getY()] = 'N';
+            } else if (component instanceof FreezingFog || component instanceof Slime || component instanceof Thorns || component instanceof TimeVortex) {
+                grid[tile.getX()][tile.getY()] = 'O';
+            } else if (component instanceof ChronoCrystal || component instanceof SightOrb || component instanceof TrapNullifier) {
+                grid[tile.getX()][tile.getY()] = 'P';
             }
         }
 
@@ -73,26 +77,25 @@ public class MazeService {
 
     public char[][] createLimitedView(Maze maze, int playerX, int playerY) {
         List<Tile> tiles = tileDAO.findAllTilesByMaze(maze.getId());
-        int size = maze.getSize();
+        int size = maze.getDifficulty().getMazeSize();
         char[][] grid = new char[size][size];
 
         // Riempie la griglia con spazi vuoti (celle non visibili)
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                grid[x][y] = ' ';
+                grid[x][y] = '.';
             }
         }
 
         // Mostra solo le caselle adiacenti al giocatore
         for (Tile tile : tiles) {
             if (Math.abs(tile.getX() - playerX) <= 1 && Math.abs(tile.getY() - playerY) <= 1) {
-                if (tile instanceof Wall) {
+                MazeComponent mazeComponent = mazeComponentDAO.findByTile(tile);
+                if (mazeComponent instanceof Wall) {
                     grid[tile.getX()][tile.getY()] = '#'; // Muri
-                } else if (tile instanceof Corridor) {
-                    grid[tile.getX()][tile.getY()] = '.'; // Corridoi
-                } else if (tile instanceof ExitTile) {
+                } else if (mazeComponent instanceof ExitTile) {
                     grid[tile.getX()][tile.getY()] = 'E'; // Uscita
-                } else if (tile instanceof StartTile) {
+                } else if (mazeComponent instanceof StartTile) {
                     grid[tile.getX()][tile.getY()] = 'S'; // Posizione di partenza
                 }
             }
@@ -103,105 +106,90 @@ public class MazeService {
         return grid;
     }
 
-    private void addAdversities(Maze maze) {
-        TileDAO tileDAO = new TileDAO();
+
+    private void addMazeComponents(Maze maze) {
         List<Tile> allTiles = tileDAO.findAllTilesByMaze(maze.getId());
-        // Selezioniamo solo i tile di tipo Corridor, escludendo start ed exit
-        List<Tile> availableTiles = allTiles.stream()
-                .filter(tile -> tile instanceof Corridor)
-                .filter(tile -> !(tile instanceof StartTile) && !(tile instanceof ExitTile))
-                .collect(Collectors.toList());
+
+        List<Tile> availableTiles = tileService.findAllAvailableTiles(allTiles);
 
         Random random = new Random();
-        AdversityDAO adversityDAO = new AdversityDAO();
 
-        // Posizionamento degli "ostacoli"
         int obstacleCount = maze.getDifficulty().getObstacleCount();
-        for (int i = 0; i < obstacleCount && !availableTiles.isEmpty(); i++) {
-            int index = random.nextInt(availableTiles.size());
-            Tile tile = availableTiles.get(index);
+        int enemyCount = maze.getDifficulty().getEnemyCount();
+        int powerUpCount = maze.getDifficulty().getPowerUpCount();
+
+        // Posizionamento degli "Ostacoli"
+        for (int i = 0; i < obstacleCount; i++) {
+            int randomTileIndex = random.nextInt(availableTiles.size());
+            Tile selectedTile = availableTiles.get(randomTileIndex);
+
             int obstacleType = random.nextInt(4);
-            Adversity adversity = null;
+            MazeComponent obstacleEntity = null;
+
             switch (obstacleType) {
                 case 0:
-                    adversity = new Thorns(tile.getX(), tile.getY(), maze);
+                    obstacleEntity = new Thorns(selectedTile);
                     break;
                 case 1:
-                    adversity = new FreezingFog(tile.getX(), tile.getY(), maze);
+                    obstacleEntity = new FreezingFog(selectedTile);
                     break;
                 case 2:
-                    adversity = new Slime(tile.getX(), tile.getY(), maze);
+                    obstacleEntity = new Slime(selectedTile);
                     break;
                 case 3:
-                    adversity = new TimeVortex(tile.getX(), tile.getY(), maze);
+                    obstacleEntity = new TimeVortex(selectedTile);
                     break;
             }
-            if (adversity != null) {
-                adversityDAO.save(adversity);
-            }
-            availableTiles.remove(index);
+
+            mazeComponentDAO.merge(obstacleEntity);
+            availableTiles.remove(randomTileIndex);
         }
 
-        // Ripristiniamo la lista dei tile disponibili per i nemici
-        availableTiles = allTiles.stream()
-                .filter(tile -> tile instanceof Corridor)
-                .filter(tile -> !(tile instanceof StartTile) && !(tile instanceof ExitTile))
-                .collect(Collectors.toList());
+        // Posizionamento dei "Nemici"
+        for (int i = 0; i < enemyCount; i++) {
+            int randomTileIndex = random.nextInt(availableTiles.size());
+            Tile selectedTile = availableTiles.get(randomTileIndex);
 
-        int enemyCount = maze.getDifficulty().getEnemyCount();
-        for (int i = 0; i < enemyCount && !availableTiles.isEmpty(); i++) {
-            int index = random.nextInt(availableTiles.size());
-            Tile tile = availableTiles.get(index);
             int enemyType = random.nextInt(3);
-            Adversity adversity = null;
+            MazeComponent enemyEntity = null;
             switch (enemyType) {
                 case 0:
-                    adversity = new PhantomHorse(tile.getX(), tile.getY(), maze);
+                    enemyEntity = new PhantomHorse(selectedTile);
                     break;
                 case 1:
-                    adversity = new ShadowDemon(tile.getX(), tile.getY(), maze);
+                    enemyEntity = new ShadowDemon(selectedTile);
                     break;
                 case 2:
-                    adversity = new IceCyclops(tile.getX(), tile.getY(), maze);
+                    enemyEntity = new IceCyclops(selectedTile);
                     break;
             }
-            if (adversity != null) {
-                adversityDAO.save(adversity);
+
+            mazeComponentDAO.merge(enemyEntity);
+            availableTiles.remove(randomTileIndex);
+        }
+
+        // Posizionamento dei "PowerUp"
+        for (int i = 0; i < powerUpCount; i++) {
+            int randomTileIndex = random.nextInt(availableTiles.size());
+            Tile selectedTile = availableTiles.get(randomTileIndex);
+
+            int powerUpType = random.nextInt(3);
+            MazeComponent powerUpEntity = null;
+            switch (powerUpType) {
+                case 0:
+                    powerUpEntity = new ChronoCrystal(selectedTile);
+                    break;
+                case 1:
+                    powerUpEntity = new SightOrb(selectedTile);
+                    break;
+                case 2:
+                    powerUpEntity = new TrapNullifier(selectedTile);
+                    break;
             }
-            availableTiles.remove(index);
+
+            mazeComponentDAO.merge(powerUpEntity);
+            availableTiles.remove(randomTileIndex);
         }
-    }
-
-    // ✅ Metodo per controllare se la mossa è valida
-    public boolean isValidMove(Maze maze, int x, int y) {
-        List<Tile> tiles = tileDAO.findAllTilesByMaze(maze.getId());
-
-        // Controlla se la posizione è dentro i limiti della mappa
-        if (x < 0 || y < 0 || x >= maze.getSize() || y >= maze.getSize()) {
-            return false;
-        }
-
-        // Cerca la tile alla posizione x, y
-        for (Tile tile : tiles) {
-            if (tile.getX() == x && tile.getY() == y) {
-                return !(tile instanceof Wall); // Se è un muro, il movimento non è valido
-            }
-        }
-
-        return false; // Se non c'è una tile valida, il movimento non è consentito
-    }
-
-    // ✅ Metodo per controllare se il giocatore ha raggiunto l'uscita
-    public boolean isExit(Maze maze, int x, int y) {
-        List<Tile> tiles = tileDAO.findAllTilesByMaze(maze.getId());
-
-        for (Tile tile : tiles) {
-            if (tile.getX() == x && tile.getY() == y && tile instanceof ExitTile) {
-                return true; // Il giocatore ha raggiunto l'uscita
-            }
-        }
-
-        return false;
     }
 
     // ✅ Metodo per ottenere la posizione di partenza del giocatore
@@ -209,8 +197,9 @@ public class MazeService {
         List<Tile> tiles = tileDAO.findAllTilesByMaze(maze.getId());
 
         for (Tile tile : tiles) {
-            if (tile instanceof StartTile) {
-                return (StartTile) tile;
+            MazeComponent mazeComponent = mazeComponentDAO.findByTile(tile);
+            if (mazeComponent instanceof StartTile) {
+                return (StartTile) mazeComponent;
             }
         }
 
