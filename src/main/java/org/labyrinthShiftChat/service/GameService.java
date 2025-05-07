@@ -62,7 +62,6 @@ public class GameService {
     }
 
     public void previewMaze() {
-        gamePlayView.print("\n🌀 Inizio Minimaze ");
         Maze maze = gameSessionManager.getGameSession().getMaze();
 
         char [][] grid = mazeService.createPreviewMiniMaze(maze);

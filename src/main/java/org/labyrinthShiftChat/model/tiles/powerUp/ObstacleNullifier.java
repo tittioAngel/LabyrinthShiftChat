@@ -18,7 +18,7 @@ public class ObstacleNullifier extends MazeComponent {
 
     @Override
     public void triggerEffect(Player player) {
-        System.out.println("Hai raccolto il Disattivatore di Ostacoli! Il prossimo OSTACOLO non avrà alcun effetto!");
+        System.out.println("\n✨ Hai raccolto il Disattivatore di Ostacoli! Il prossimo OSTACOLO non avrà alcun effetto!");
         player.setNextObstacleIgnored(true);
     }
 }

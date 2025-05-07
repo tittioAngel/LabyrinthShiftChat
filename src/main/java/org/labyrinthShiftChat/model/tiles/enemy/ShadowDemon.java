@@ -18,7 +18,7 @@ public class ShadowDemon extends MazeComponent {
 
     @Override
     public void triggerEffect(Player player) {
-        System.out.println("👹 Uno Shadow Demon ti ha colpito! Verrai Portato alla posizione di partenza");
+        System.out.println("\n💀 Uno Shadow Demon ti ha colpito! Verrai Portato alla posizione di partenza");
         player.setPosition(0,0);
     }
 }

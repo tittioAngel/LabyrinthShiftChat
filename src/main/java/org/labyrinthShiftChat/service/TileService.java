@@ -34,6 +34,8 @@ public class TileService {
             mazeComponent.applyEffect(player);
             mazeComponentDAO.update(mazeComponent);
 
+
+
             gameSessionManager.getGameSession().setCurrentTile(tileDAO.findTileByPosition(player.getX(), player.getY(), maze.getId()));
             gameSessionDAO.update(gameSessionManager.getGameSession());
 

@@ -18,7 +18,7 @@ public class PhantomHorse extends MazeComponent {
 
     @Override
     public void triggerEffect(Player player) {
-        System.out.println("Un Phantom Horse ti ha colpito! Verrai spinto indietro di 4 tile.");
+        System.out.println("\n💀 Un Phantom Horse ti ha colpito! Verrai spinto indietro di 4 tile.");
         int[] previousPos = player.getPreviousPosition(4);
         player.setPosition(previousPos[0], previousPos[1]);
     }

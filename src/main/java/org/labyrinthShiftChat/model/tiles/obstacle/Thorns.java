@@ -23,11 +23,11 @@ public class Thorns extends MazeComponent {
     @Override
     public void triggerEffect(Player player) {
         if (!player.isNextObstacleIgnored()) {
-            System.out.println("Hai attivato le Spine! La tua velocità è ridotta del 50% per " + getEffectDuration() + " secondi.");
+            System.out.println("\n🚧 Hai attivato le Spine! La tua velocità è ridotta del 50% per " + getEffectDuration() + " secondi.");
             player.applySpeedEffect(getEffectDuration(), 0.5);
             player.setNextObstacleIgnored(false);
         } else {
-            System.out.println("Sei nelle Spine! Non avrà alcun effetto, utilizzi il Disattivatore di Ostacoli! ");
+            System.out.println("\n🚧 Sei nelle Spine! Non avrà alcun effetto, utilizzi il Disattivatore di Ostacoli! ");
         }
     }
 }

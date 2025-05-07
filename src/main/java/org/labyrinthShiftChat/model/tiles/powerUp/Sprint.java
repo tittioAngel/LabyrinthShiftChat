@@ -22,7 +22,7 @@ public class Sprint extends MazeComponent {
 
     @Override
     public void triggerEffect(Player player) {
-        System.out.println("Hai attivato lo Sprint! La tua velocità è raddoppiata per " + getEffectDuration() + " secondi.");
+        System.out.println("\n✨ Hai attivato lo Sprint! La tua velocità è raddoppiata per " + getEffectDuration() + " secondi.");
         player.applySpeedEffect(getEffectDuration(), 2);
     }
 }

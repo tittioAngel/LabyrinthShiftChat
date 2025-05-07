@@ -22,7 +22,7 @@ public class IceCyclops extends MazeComponent {
 
     @Override
     public void triggerEffect(Player player) {
-        System.out.println("❄️ Un Ice Cyclops genera Nebbia Gelida! La tua velocità è ridotta per " + getEffectDuration() + " secondi.");
+        System.out.println("\n💀 Un Ice Cyclops genera Nebbia Gelida! La tua velocità è ridotta per " + getEffectDuration() + " secondi.");
         //player.setSpeed(player.getSpeed()/3);
         player.applySpeedEffect(getEffectDuration(),0.33);
     }

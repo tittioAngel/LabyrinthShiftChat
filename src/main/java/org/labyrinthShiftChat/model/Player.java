@@ -16,14 +16,16 @@ public class Player {
     private double speed = 1.0;
     private long slowEndTime = 0;
     private boolean nextObstacleIgnored;
+    private boolean showAllMaze;
 
-    private static final int MAX_HISTORY = 5;  // Numero massimo di posizioni memorizzate
+    private static final int MAX_HISTORY = 5;
     private LinkedList<int[]> positionHistory = new LinkedList<>();
 
     public Player(int startX, int startY) {
         this.x = startX;
         this.y = startY;
         this.nextObstacleIgnored = false;
+        this.showAllMaze = false;
         addPositionToHistory(startX, startY);
     }
 

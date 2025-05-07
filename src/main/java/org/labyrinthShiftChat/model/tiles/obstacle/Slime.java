@@ -23,7 +23,7 @@ public class Slime extends MazeComponent {
     @Override
     public void triggerEffect(Player player) {
         if (!player.isNextObstacleIgnored()) {
-            System.out.println("Hai attivato lo Slime! Sei immobilizzato per " + getEffectDuration() + "secondi.");
+            System.out.println("\n🚧 Hai attivato lo Slime! Sei immobilizzato per " + getEffectDuration() + "secondi.");
             try {
                 Thread.sleep(getEffectDuration() * 1000L);
             } catch (InterruptedException e) {
@@ -31,7 +31,7 @@ public class Slime extends MazeComponent {
             }
             player.setNextObstacleIgnored(false);
         } else {
-            System.out.println("Sei nello Slime! Non avrà alcun effetto, utilizzi il Disattivatore di Ostacoli! ");
+            System.out.println("\n🚧 Sei nello Slime! Non avrà alcun effetto, utilizzi il Disattivatore di Ostacoli! ");
         }
     }
 }

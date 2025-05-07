@@ -7,10 +7,12 @@ import org.labyrinthShiftChat.model.tiles.common.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 import org.labyrinthShiftChat.util.RotatingControls;
+import org.labyrinthShiftChat.util.TimerManager;
 import org.labyrinthShiftChat.view.GamePlayView;
 import org.labyrinthShiftChat.view.ProfileView;
 import org.labyrinthShiftChat.view.StoryModeView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -31,22 +33,20 @@ public class StoryModeController {
     private final GamePlayView gamePlayView = new GamePlayView();
 
     private static final int TOTAL_MINIMAZES = 3;
+    private static final long TIME_LIMIT_MILLIS = 60 * 1000;
 
     public void startStoryMode() throws InterruptedException {
 
         boolean stayInStoryMode = true;
-
         int levelSelected = 0;
 
         while (stayInStoryMode) {
             profileView.showProfileInfo(gameSessionManager.getProfile());
-
             storyModeView.showStoryModeMenu();
 
             int input;
             do {
                 input = storyModeView.readIntInput("👉 Scelta: ");
-
                 if (input < 1 || input > 4) {
                     storyModeView.print("⚠️ Scelta non valida. Riprova.");
                 }
@@ -69,7 +69,6 @@ public class StoryModeController {
                 default -> storyModeView.print("\n⚠️ Scelta non valida. Riprova.");
             }
         }
-
     }
 
     public int showRetryLevelMenu() {
@@ -85,7 +84,6 @@ public class StoryModeController {
         int levelSelected;
         do {
             levelSelected = storyModeView.readIntInput("👉 Inserisci il numero del livello: ");
-
             if (levelSelected < 1 || levelSelected > completedLevels.size() + 2) {
                 storyModeView.print("❌ Scelta non valida. Riprova.");
             }
@@ -122,96 +120,78 @@ public class StoryModeController {
             gameService.previewMaze();
             storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
 
-            long startTime = System.currentTimeMillis();
-            long timeLimit = 60 * 1000;
+            TimerManager timer = new TimerManager(TIME_LIMIT_MILLIS, gameSessionManager.getGameSession().getPlayer().getSpeed());
             int stars = 0;
             boolean finished = false;
-            while (!finished) {
 
-                stars = playLimitedView(startTime, timeLimit);
+            while (!finished) {
+                stars = playLimitedView(timer);
 
                 if (stars == -1) {
-
                     gamePlayView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
                     gameService.previewMaze();
                     storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
-
-                    startTime = System.currentTimeMillis();
+                    timer = new TimerManager(TIME_LIMIT_MILLIS, gameSessionManager.getGameSession().getPlayer().getSpeed());
                 } else if (stars != 0) {
                     finished = true;
                 }
             }
 
             totalStars += stars;
-
             storyModeView.print("\n🏆 Hai completato il MiniMaze " + (miniMazeCompleted + 1) + " con punteggio: " + stars + "/3");
-
             Thread.sleep(3000);
-
             miniMazeCompleted++;
         }
 
         return totalStars;
-
-
     }
 
-    public int playLimitedView(long startTime, long timeLimit) {
-        long elapsedTime;
+    public int playLimitedView(TimerManager timer) {
 
-        if (!gameSessionManager.getGameSession().getPlayer().resetSpeed()) {
-            elapsedTime = System.currentTimeMillis() - startTime;
-        } else {
-             elapsedTime = (long) ((System.currentTimeMillis() * (1/gameSessionManager.getGameSession().getPlayer().getSpeed())) - startTime);
-        }
-
-        long remainingTime = (timeLimit - elapsedTime) / 1000;
-
-        char[][]grid;
-
-        // Se il tempo è scaduto, rigeneriamo il minimaze e resettare il timer
-        if (remainingTime <= 0) {
+        if (timer.isTimeOver()) {
             storyModeView.print("\n⏳ Tempo scaduto!");
             gameService.regenerateMazeInGameSession(gameSessionManager.getGameSession().getMaze().getDifficulty(), GameMode.STORY_MODE);
-
             return -1;
         }
 
-        grid = mazeService.createLimitedView(gameSessionManager.getGameSession().getMaze(),
+        char[][] grid = mazeService.createLimitedView(
+                gameSessionManager.getGameSession().getMaze(),
                 gameSessionManager.getGameSession().getCurrentTile().getX(),
                 gameSessionManager.getGameSession().getCurrentTile().getY());
 
         gamePlayView.showMiniMaze(grid, false);
+        storyModeView.print("\n⏳ Tempo rimasto: " + timer.getRemainingTimeSeconds() + " secondi velocità Giocatore: " + gameSessionManager.getGameSession().getPlayer().getSpeed());
 
-        storyModeView.print("\n⏳ Tempo rimasto: " + remainingTime + " secondi velocità Giocatore: "+ gameSessionManager.getGameSession().getPlayer().getSpeed());
-
-        RotatingControls.Direction inputDir = null;
         String direction = gamePlayView.readString("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire): ").toUpperCase();
+        List<String> possibleDirections = new ArrayList<>(List.of("W", "A", "S", "D"));
 
         if (direction.equals("Q")) {
             storyModeView.print("❌ Hai abbandonato la partita.");
             gameService.stopGame();
-        } else if (!direction.equals("W") || !direction.equals("A") || !direction.equals("D") || !direction.equals("S")) {
-            storyModeView.print("⚠ Direzione non corretta.");
-        } else {
-            inputDir = RotatingControls.convertInputToDirection(direction);
+            return 0;
+        } else if (!possibleDirections.contains(direction)) {
+            storyModeView.print("❌ Direzione non corretta.");
+            return 0;
         }
 
-        return manageDirectionSelected(inputDir, startTime);
-
+        RotatingControls.Direction inputDir = RotatingControls.convertInputToDirection(direction);
+        return manageDirectionSelected(inputDir, timer);
     }
 
-    public int manageDirectionSelected(RotatingControls.Direction direction, long startTime) {
-
+    public int manageDirectionSelected(RotatingControls.Direction direction, TimerManager timer) {
         if (direction != null) {
             Tile newTile = playerService.movePlayerOnNewTile(direction);
             if (newTile != null) {
                 MazeComponent mazeComponent = mazeService.findMazeComponentByTile(newTile);
                 if (mazeComponent instanceof ExitTile) {
-                    long totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000;
-                    return scoringService.computeStars(totalTimeSeconds);
+                    return scoringService.computeStars(timer.getTotalTimeSeconds());
                 } else {
                     tileService.checkTileEffects();
+
+                    if (gameSessionManager.getGameSession().getPlayer().isShowAllMaze()) {
+                        gameService.previewMaze();
+                        timer.addTimeSeconds(gameSessionManager.getGameSession().getMaze().getDifficulty().getPreviewTime());
+                    }
                 }
             }
         }
@@ -220,13 +200,10 @@ public class StoryModeController {
     }
 
     public void manageEndLevel(int totalStars) {
-
         int averageStars = totalStars / TOTAL_MINIMAZES;
-        //Devo controllare se il livello è gia stato completato
         storyModeService.manageSaveCompletedLevel(averageStars);
         storyModeView.print("\n🏆 **Complimenti! Hai completato tutti i minimaze del livello.** 🏆");
         storyModeView.print("⭐ Punteggio finale medio: " + averageStars + " stelle.");
-
         gameSessionManager.resetSession();
     }
 }

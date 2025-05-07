@@ -23,11 +23,11 @@ public class FreezingFog extends MazeComponent {
     @Override
     public void triggerEffect(Player player) {
         if (!player.isNextObstacleIgnored()) {
-            System.out.println("Hai attivato la Nebbia Gelida! La tua velocità è ridotta di un terzo per " + getEffectDuration() + " secondi.");
+            System.out.println("\n🚧 Hai attivato la Nebbia Gelida! La tua velocità è ridotta di un terzo per " + getEffectDuration() + " secondi.");
             player.applySpeedEffect(getEffectDuration(), 0.33);
             player.setNextObstacleIgnored(false);
         } else {
-            System.out.println("Sei nella Nebbia Gelida! Non avrà alcun effetto, utilizzi il Disattivatore di Ostacoli! ");
+            System.out.println("\n🚧 Sei nella Nebbia Gelida! Non avrà alcun effetto, utilizzi il Disattivatore di Ostacoli! ");
         }
     }
 }

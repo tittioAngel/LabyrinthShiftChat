@@ -9,7 +9,7 @@ public class GamePlayView extends BaseView{
         int size = grid.length;
 
         if (isTotal) {
-            System.out.println("\n🔍 Pre-visualizzazione del labirinto:");
+            System.out.println("\n🔍 Visualizzazione completa del labirinto:");
         } else {
             System.out.println("\n👀 Vista limitata del labirinto:");
         }
