@@ -51,7 +51,7 @@ public class Player {
 
     public void applySpeedEffect(long durationSec,double speed) {
         this.speed *= speed; // Riduce o aumenta la velocità
-        slowEndTime = System.currentTimeMillis() + (durationSec*1000);
+        slowEndTime = System.currentTimeMillis() + (durationSec * 1000);
     }
 
     public boolean resetSpeed() {

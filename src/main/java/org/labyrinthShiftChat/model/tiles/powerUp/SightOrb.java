@@ -10,7 +10,6 @@ import org.labyrinthShiftChat.model.tiles.MazeComponent;
 
 @Entity
 @DiscriminatorValue("SightOrb")
-@Getter
 @NoArgsConstructor
 public class SightOrb extends MazeComponent {
 
