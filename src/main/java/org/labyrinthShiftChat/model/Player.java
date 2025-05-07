@@ -10,11 +10,12 @@ import java.util.LinkedList;
 @Setter
 @NoArgsConstructor
 public class Player {
+
     private int x;
     private int y;
-    private double speed = 1.0;// Velocità normale del giocatore
-    private long slowEndTime = 0; // Timestamp di fine rallentamento
-
+    private double speed = 1.0;
+    private long slowEndTime = 0;
+    private boolean nextObstacleIgnored;
 
     private static final int MAX_HISTORY = 5;  // Numero massimo di posizioni memorizzate
     private LinkedList<int[]> positionHistory = new LinkedList<>();
@@ -22,6 +23,7 @@ public class Player {
     public Player(int startX, int startY) {
         this.x = startX;
         this.y = startY;
+        this.nextObstacleIgnored = false;
         addPositionToHistory(startX, startY);
     }
 

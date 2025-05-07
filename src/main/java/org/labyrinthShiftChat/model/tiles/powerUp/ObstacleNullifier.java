@@ -8,16 +8,17 @@ import org.labyrinthShiftChat.model.Tile;
 import org.labyrinthShiftChat.model.tiles.MazeComponent;
 
 @Entity
-@DiscriminatorValue("TrapNullifier")
+@DiscriminatorValue("ObstacleNullifier")
 @NoArgsConstructor
-public class TrapNullifier extends MazeComponent {
+public class ObstacleNullifier extends MazeComponent {
 
-    public TrapNullifier(Tile tile) {
+    public ObstacleNullifier(Tile tile) {
         super(tile, true);
     }
 
     @Override
     public void triggerEffect(Player player) {
-
+        System.out.println("Hai raccolto il Disattivatore di Ostacoli! Il prossimo OSTACOLO non avrà alcun effetto!");
+        player.setNextObstacleIgnored(true);
     }
 }

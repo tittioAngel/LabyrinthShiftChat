@@ -12,9 +12,9 @@ import org.labyrinthShiftChat.model.tiles.obstacle.FreezingFog;
 import org.labyrinthShiftChat.model.tiles.obstacle.Slime;
 import org.labyrinthShiftChat.model.tiles.obstacle.Thorns;
 import org.labyrinthShiftChat.model.tiles.obstacle.TimeVortex;
-import org.labyrinthShiftChat.model.tiles.powerUp.ChronoCrystal;
+import org.labyrinthShiftChat.model.tiles.powerUp.Sprint;
 import org.labyrinthShiftChat.model.tiles.powerUp.SightOrb;
-import org.labyrinthShiftChat.model.tiles.powerUp.TrapNullifier;
+import org.labyrinthShiftChat.model.tiles.powerUp.ObstacleNullifier;
 import org.labyrinthShiftChat.util.MazeGenerator;
 
 import java.util.List;
@@ -67,7 +67,7 @@ public class MazeService {
                 grid[tile.getX()][tile.getY()] = 'N';
             } else if (component instanceof FreezingFog || component instanceof Slime || component instanceof Thorns || component instanceof TimeVortex) {
                 grid[tile.getX()][tile.getY()] = 'O';
-            } else if (component instanceof ChronoCrystal || component instanceof SightOrb || component instanceof TrapNullifier) {
+            } else if (component instanceof Sprint || component instanceof SightOrb || component instanceof ObstacleNullifier) {
                 grid[tile.getX()][tile.getY()] = 'P';
             }
         }
@@ -83,7 +83,7 @@ public class MazeService {
         // Riempie la griglia con spazi vuoti (celle non visibili)
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                grid[x][y] = '.';
+                grid[x][y] = ' ';
             }
         }
 
@@ -97,6 +97,8 @@ public class MazeService {
                     grid[tile.getX()][tile.getY()] = 'E'; // Uscita
                 } else if (mazeComponent instanceof StartTile) {
                     grid[tile.getX()][tile.getY()] = 'S'; // Posizione di partenza
+                } else {
+                    grid[tile.getX()][tile.getY()] = '.';
                 }
             }
         }
@@ -177,13 +179,13 @@ public class MazeService {
             MazeComponent powerUpEntity = null;
             switch (powerUpType) {
                 case 0:
-                    powerUpEntity = new ChronoCrystal(selectedTile);
+                    powerUpEntity = new Sprint(selectedTile);
                     break;
                 case 1:
                     powerUpEntity = new SightOrb(selectedTile);
                     break;
                 case 2:
-                    powerUpEntity = new TrapNullifier(selectedTile);
+                    powerUpEntity = new ObstacleNullifier(selectedTile);
                     break;
             }
 

@@ -50,9 +50,9 @@
         <mapping class="org.labyrinthShiftChat.model.tiles.obstacle.Thorns"/>
         <mapping class="org.labyrinthShiftChat.model.tiles.obstacle.TimeVortex"/>
 
-        <mapping class="org.labyrinthShiftChat.model.tiles.powerUp.ChronoCrystal"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.powerUp.Sprint"/>
         <mapping class="org.labyrinthShiftChat.model.tiles.powerUp.SightOrb"/>
-        <mapping class="org.labyrinthShiftChat.model.tiles.powerUp.TrapNullifier"/>
+        <mapping class="org.labyrinthShiftChat.model.tiles.powerUp.ObstacleNullifier"/>
 
     </session-factory>
 </hibernate-configuration>

@@ -18,9 +18,15 @@ public class TimeVortex extends MazeComponent {
 
     @Override
     public void triggerEffect(Player player) {
-        System.out.println("Hai attivato il Vortice Temporale! Verrai spostato indietro di 2 tile.");
-        int[] previousPos = player.getPreviousPosition(2);
-        player.setPosition(previousPos[0], previousPos[1]);
+        if (!player.isNextObstacleIgnored()) {
+            System.out.println("Hai attivato il Vortice Temporale! Verrai spostato indietro di 2 tile.");
+            int[] previousPos = player.getPreviousPosition(2);
+            player.setPosition(previousPos[0], previousPos[1]);
+            player.setNextObstacleIgnored(false);
+        } else {
+            System.out.println("Sei nel Vortice Temporale! Non avrà alcun effetto, utilizzi il Disattivatore di Ostacoli! ");
+        }
+
     }
 
 }

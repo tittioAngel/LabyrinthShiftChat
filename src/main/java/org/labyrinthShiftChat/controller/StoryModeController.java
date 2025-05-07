@@ -185,31 +185,34 @@ public class StoryModeController {
 
         storyModeView.print("\n⏳ Tempo rimasto: " + remainingTime + " secondi velocità Giocatore: "+ gameSessionManager.getGameSession().getPlayer().getSpeed());
 
-        String direction = gamePlayView.readString("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire): ");
+        RotatingControls.Direction inputDir = null;
+        String direction = gamePlayView.readString("➡️ Inserisci la direzione (WASD per muoverti, Q per uscire): ").toUpperCase();
 
-        RotatingControls.Direction inputDir = RotatingControls.convertInputToDirection(direction);
+        if (direction.equals("Q")) {
+            storyModeView.print("❌ Hai abbandonato la partita.");
+            gameService.stopGame();
+        } else if (!direction.equals("W") || !direction.equals("A") || !direction.equals("D") || !direction.equals("S")) {
+            storyModeView.print("⚠ Direzione non corretta.");
+        } else {
+            inputDir = RotatingControls.convertInputToDirection(direction);
+        }
 
         return manageDirectionSelected(inputDir, startTime);
 
     }
 
     public int manageDirectionSelected(RotatingControls.Direction direction, long startTime) {
-        Tile newTile = null;
 
-        if (direction == null) {
-            storyModeView.print("❌ Hai abbandonato la partita.");
-            gameService.stopGame();
-        } else {
-            newTile = playerService.movePlayerOnNewTile(direction);
-        }
-
-        if (newTile != null) {
-            MazeComponent mazeComponent = mazeService.findMazeComponentByTile(newTile);
-            if (mazeComponent instanceof ExitTile) {
-                long totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000;
-                return scoringService.computeStars(totalTimeSeconds);
-            } else {
-                tileService.checkTileEffects();
+        if (direction != null) {
+            Tile newTile = playerService.movePlayerOnNewTile(direction);
+            if (newTile != null) {
+                MazeComponent mazeComponent = mazeService.findMazeComponentByTile(newTile);
+                if (mazeComponent instanceof ExitTile) {
+                    long totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000;
+                    return scoringService.computeStars(totalTimeSeconds);
+                } else {
+                    tileService.checkTileEffects();
+                }
             }
         }
 
