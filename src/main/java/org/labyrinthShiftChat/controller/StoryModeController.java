@@ -7,7 +7,7 @@ import org.labyrinthShiftChat.model.tiles.common.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 import org.labyrinthShiftChat.util.RotatingControls;
-import org.labyrinthShiftChat.util.TimerManager;
+import org.labyrinthShiftChat.util.TimerStoryMode;
 import org.labyrinthShiftChat.view.GamePlayView;
 import org.labyrinthShiftChat.view.ProfileView;
 import org.labyrinthShiftChat.view.StoryModeView;
@@ -120,7 +120,7 @@ public class StoryModeController {
             gameService.previewMaze();
             storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
 
-            TimerManager timer = new TimerManager(TIME_LIMIT_MILLIS, gameSessionManager.getGameSession().getPlayer().getSpeed());
+            TimerStoryMode timer = new TimerStoryMode(TIME_LIMIT_MILLIS, gameSessionManager.getGameSession().getPlayer().getSpeed());
             int stars = 0;
             boolean finished = false;
 
@@ -131,7 +131,7 @@ public class StoryModeController {
                     gamePlayView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
                     gameService.previewMaze();
                     storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
-                    timer = new TimerManager(TIME_LIMIT_MILLIS, gameSessionManager.getGameSession().getPlayer().getSpeed());
+                    timer = new TimerStoryMode(TIME_LIMIT_MILLIS, gameSessionManager.getGameSession().getPlayer().getSpeed());
                 } else if (stars != 0) {
                     finished = true;
                 }
@@ -146,7 +146,7 @@ public class StoryModeController {
         return totalStars;
     }
 
-    public int playLimitedView(TimerManager timer) {
+    public int playLimitedView(TimerStoryMode timer) {
 
         if (timer.isTimeOver()) {
             storyModeView.print("\n⏳ Tempo scaduto!");
@@ -178,7 +178,7 @@ public class StoryModeController {
         return manageDirectionSelected(inputDir, timer);
     }
 
-    public int manageDirectionSelected(RotatingControls.Direction direction, TimerManager timer) {
+    public int manageDirectionSelected(RotatingControls.Direction direction, TimerStoryMode timer) {
         if (direction != null) {
             Tile newTile = playerService.movePlayerOnNewTile(direction);
             if (newTile != null) {

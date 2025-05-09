@@ -1,12 +1,12 @@
 package org.labyrinthShiftChat.util;
 
-public class TimerManager {
+public class TimerStoryMode {
 
     private final long startTime;
     private long timeLimitMillis; // Rimosso 'final'
     private final double playerSpeed;
 
-    public TimerManager(long timeLimitMillis, double playerSpeed) {
+    public TimerStoryMode(long timeLimitMillis, double playerSpeed) {
         this.startTime = System.currentTimeMillis();
         this.timeLimitMillis = timeLimitMillis;
         this.playerSpeed = playerSpeed;

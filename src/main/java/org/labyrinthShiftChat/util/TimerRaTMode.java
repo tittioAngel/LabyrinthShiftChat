@@ -1,13 +1,13 @@
 package org.labyrinthShiftChat.util;
 
-public class GameTimer {
+public class TimerRaTMode {
     private final long totalMillis;
     private final long startTime;
     private long pausedDuration;
     private long pauseStart;
     private boolean isPaused;
 
-    public GameTimer(long totalSeconds) {
+    public TimerRaTMode(long totalSeconds) {
         this.totalMillis = totalSeconds * 1000L;
         this.startTime = System.currentTimeMillis();
         this.pausedDuration = 0;

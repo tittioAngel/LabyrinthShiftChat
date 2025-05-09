@@ -7,7 +7,7 @@ import org.labyrinthShiftChat.model.tiles.MazeComponent;
 import org.labyrinthShiftChat.model.tiles.common.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
-import org.labyrinthShiftChat.util.GameTimer;
+import org.labyrinthShiftChat.util.TimerRaTMode;
 import org.labyrinthShiftChat.util.RotatingControls;
 import org.labyrinthShiftChat.view.GamePlayView;
 import org.labyrinthShiftChat.view.ProfileView;
@@ -89,11 +89,11 @@ public class RaTModeController {
         raTModeView.print("\n🎮 Difficoltà selezionata: " + difficultyLevel);
         raTModeView.print("📜 Tempo totale disponibile: " + difficultyLevel.getRatTime() + " secondi");
 
-        GameTimer gameTimer = new GameTimer(difficultyLevel.getRatTime());
+        TimerRaTMode timerRaTMode = new TimerRaTMode(difficultyLevel.getRatTime());
 
-        while (!gameTimer.isTimeOver()) {
+        while (!timerRaTMode.isTimeOver()) {
 
-            gameTimer.pause();
+            timerRaTMode.pause();
 
             gameService.createMazeInGameSession(difficultyLevel, GameMode.RAT_MODE);
             gameService.previewMaze();
@@ -104,18 +104,18 @@ public class RaTModeController {
             raTModeView.print("🧭 I comandi sono stati rimescolati! Occhio alla bussola!");
             raTModeView.getMappedControlsInfo(rotatingControls);
 
-            gameTimer.resume();
+            timerRaTMode.resume();
 
-            boolean resolve = playLimitedView(gameTimer, difficultyLevel, rotatingControls);
+            boolean resolve = playLimitedView(timerRaTMode, difficultyLevel, rotatingControls);
 
             if (resolve) {
-                gameTimer.pause();
+                timerRaTMode.pause();
 
                 miniMazeCompleted++;
                 raTModeView.print("\n🏆 Hai completato il MiniMaze!");
                 Thread.sleep(3000);
 
-                gameTimer.resume();
+                timerRaTMode.resume();
             }
 
         }
@@ -125,18 +125,18 @@ public class RaTModeController {
         return miniMazeCompleted;
     }
 
-    public boolean playLimitedView(GameTimer gameTimer, DifficultyLevel difficultyLevel, RotatingControls rotatingControls) {
+    public boolean playLimitedView(TimerRaTMode timerRaTMode, DifficultyLevel difficultyLevel, RotatingControls rotatingControls) {
 
         int totalMovements = difficultyLevel.getRatMovements();
 
-        while (totalMovements > 0 && !gameTimer.isTimeOver()) {
+        while (totalMovements > 0 && !timerRaTMode.isTimeOver()) {
             char [][] grid = mazeService.createLimitedView(gameSessionManager.getGameSession().getMaze(),
                     gameSessionManager.getGameSession().getCurrentTile().getX(),
                     gameSessionManager.getGameSession().getCurrentTile().getY());
 
             gamePlayView.showMiniMaze(grid, false);
 
-            raTModeView.printTimeBar(gameTimer.getRemainingTime(), difficultyLevel.getRatTime() * 1000L);
+            raTModeView.printTimeBar(timerRaTMode.getRemainingTime(), difficultyLevel.getRatTime() * 1000L);
 
             raTModeView.print("\nMovimenti totali disponibili: " + totalMovements + "/" + difficultyLevel.getRatMovements());
             raTModeView.print("\nVelocità Giocatore: "+ gameSessionManager.getGameSession().getPlayer().getSpeed());
@@ -163,6 +163,12 @@ public class RaTModeController {
                     return true;
                 } else {
                     tileService.checkTileEffects();
+
+                    if (gameSessionManager.getGameSession().getPlayer().isShowAllMaze()) {
+                        timerRaTMode.pause();
+                        gameService.previewMaze();
+                        timerRaTMode.resume();
+                    }
                 }
             }
 
