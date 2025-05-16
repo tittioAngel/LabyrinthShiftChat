@@ -1,9 +1,10 @@
 package org.labyrinthShiftChat.view;
 
 import lombok.NoArgsConstructor;
+import org.labyrinthShiftChat.model.tiles.MazeSymbolRegistry;
 
 @NoArgsConstructor
-public class GamePlayView extends BaseView{
+public class GamePlayView extends BaseView {
 
     public void showMiniMaze(char[][] grid, boolean isTotal) {
         int size = grid.length;
@@ -13,37 +14,12 @@ public class GamePlayView extends BaseView{
         } else {
             System.out.println("\n👀 Vista limitata del labirinto:");
         }
+
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < grid[y].length; x++) {
                 char symbol = grid[x][y];
-                switch (symbol) {
-                    case 'S':
-                        System.out.print("🏁 "); // Punto di ingresso
-                        break;
-                    case 'O':
-                        System.out.print("🚧 "); // Ostacolo
-                        break;
-                    case 'N':
-                        System.out.print("💀 "); // Nemico
-                        break;
-                    case 'E':
-                        System.out.print("🚪 "); // Uscita
-                        break;
-                    case 'G':
-                        System.out.print("🧑‍ "); // Giocatore (stile primo piano)
-                        break;
-                    case '#':
-                        System.out.print("🧱 "); // Muro
-                        break;
-                    case '.':
-                        System.out.print("⬜ "); // Corridoio
-                        break;
-                    case 'P':
-                        System.out.print("✨ "); // Power-up generico
-                        break;
-                    default:
-                        System.out.print(symbol + " "); // Per altri caratteri, se ce ne sono
-                }
+                String emoji = MazeSymbolRegistry.getEmojiForSymbol(symbol);
+                System.out.print(emoji);
             }
             System.out.println();
         }
