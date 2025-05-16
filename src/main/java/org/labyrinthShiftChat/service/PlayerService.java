@@ -1,16 +1,16 @@
 package org.labyrinthShiftChat.service;
 
 
-import org.labyrinthShiftChat.dao.GameSessionDAO;
-import org.labyrinthShiftChat.dao.MazeComponentDAO;
-import org.labyrinthShiftChat.dao.TileDAO;
+import org.labyrinthShiftChat.foundation.GameSessionDAO;
+import org.labyrinthShiftChat.foundation.MazeComponentDAO;
+import org.labyrinthShiftChat.foundation.TileDAO;
 import org.labyrinthShiftChat.model.GameSession;
 import org.labyrinthShiftChat.model.Player;
 import org.labyrinthShiftChat.model.Tile;
 import org.labyrinthShiftChat.model.tiles.MazeComponent;
 import org.labyrinthShiftChat.model.tiles.common.Wall;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
-import org.labyrinthShiftChat.util.RotatingControls;
+import org.labyrinthShiftChat.util.controls.RotatingControls;
 
 public class PlayerService {
 

@@ -1,4 +1,4 @@
-package org.labyrinthShiftChat.config;
+package org.labyrinthShiftChat.foundation.config;
 
 import org.labyrinthShiftChat.model.*;
 import org.hibernate.SessionFactory;
@@ -28,9 +28,4 @@ public class HibernateUtil {
         return sessionFactory;
     }
 
-    public static void shutdown() {
-        if (sessionFactory != null && !sessionFactory.isClosed()) {
-            sessionFactory.close();
-        }
-    }
 }

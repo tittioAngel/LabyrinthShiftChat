@@ -1,7 +1,8 @@
 package org.labyrinthShiftChat.view;
 
 import org.labyrinthShiftChat.model.DifficultyLevel;
-import org.labyrinthShiftChat.util.RotatingControls;
+import org.labyrinthShiftChat.util.controls.RandomRotationStrategy;
+import org.labyrinthShiftChat.util.controls.RotatingControls;
 
 public class RaTModeView extends BaseView{
 
@@ -17,7 +18,7 @@ public class RaTModeView extends BaseView{
     public void showInfoRATMode(){
         System.out.println("\n🎮 Benvenuto nella modalità CORSA CONTRO IL TEMPO!");
         System.out.println("\n📜 Cerca di completare più labirinti possibili nel tempo stabilito dalla difficoltà scelta!");
-        System.out.println("🧭 Attenzione: i comandi cambiano direzione ogni tot secondi, dovrai adattarti in fretta!");
+        System.out.println("🧭 Attenzione: i comandi cambiano direzione ad ogni labirinto risolto, dovrai adattarti in fretta!");
         System.out.println("🎯 Ogni labirinto ha anche un numero massimo di mosse: pensa bene prima di agire!");
         System.out.println("🔥 Sfida i tuoi riflessi e la tua mente in una corsa contro il tempo sempre più frenetica!");
     }
@@ -29,7 +30,7 @@ public class RaTModeView extends BaseView{
         System.out.println("3️⃣  🔙 Torna al menu delle modalità");
     }
 
-    public void getMappedControlsInfo(RotatingControls controls) {
+    public void getMappedControlsInfo(RandomRotationStrategy controls) {
          System.out.println("\n🔁 Mappatura comandi attuale:\n" +
                 "  W ➡️ " + controls.mapInput(RotatingControls.Direction.UP) + "\n" +
                 "  A ➡️ " + controls.mapInput(RotatingControls.Direction.LEFT) + "\n" +

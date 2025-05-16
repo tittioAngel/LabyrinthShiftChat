@@ -1,10 +1,8 @@
 package org.labyrinthShiftChat.service;
 
 import lombok.NoArgsConstructor;
-import org.labyrinthShiftChat.dao.GameSessionDAO;
-import org.labyrinthShiftChat.dao.MazeComponentDAO;
+import org.labyrinthShiftChat.foundation.GameSessionDAO;
 import org.labyrinthShiftChat.model.*;
-import org.labyrinthShiftChat.model.tiles.MazeComponent;
 import org.labyrinthShiftChat.model.tiles.common.StartTile;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 import org.labyrinthShiftChat.view.GamePlayView;

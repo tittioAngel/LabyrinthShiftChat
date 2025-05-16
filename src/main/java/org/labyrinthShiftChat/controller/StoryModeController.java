@@ -6,8 +6,10 @@ import org.labyrinthShiftChat.model.tiles.MazeComponent;
 import org.labyrinthShiftChat.model.tiles.common.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
-import org.labyrinthShiftChat.util.RotatingControls;
+import org.labyrinthShiftChat.util.controls.NoRotationStrategy;
+import org.labyrinthShiftChat.util.controls.RotatingControls;
 import org.labyrinthShiftChat.util.TimerStoryMode;
+import org.labyrinthShiftChat.util.controls.RotationStrategy;
 import org.labyrinthShiftChat.view.GamePlayView;
 import org.labyrinthShiftChat.view.ProfileView;
 import org.labyrinthShiftChat.view.StoryModeView;
@@ -31,6 +33,8 @@ public class StoryModeController {
     private final StoryModeView storyModeView = new StoryModeView();
     private final ProfileView profileView = new ProfileView();
     private final GamePlayView gamePlayView = new GamePlayView();
+
+    private final RotationStrategy noRotationStrategy = new NoRotationStrategy();
 
     private static final int TOTAL_MINIMAZES = 3;
     private static final long TIME_LIMIT_MILLIS = 60 * 1000;
@@ -175,7 +179,8 @@ public class StoryModeController {
         }
 
         RotatingControls.Direction inputDir = RotatingControls.convertInputToDirection(direction);
-        return manageDirectionSelected(inputDir, timer);
+        RotatingControls.Direction mappedDir = noRotationStrategy.mapInput(inputDir);
+        return manageDirectionSelected(mappedDir, timer);
     }
 
     public int manageDirectionSelected(RotatingControls.Direction direction, TimerStoryMode timer) {

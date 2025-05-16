@@ -1,17 +1,19 @@
-package org.labyrinthShiftChat.dao;
+package org.labyrinthShiftChat.foundation;
 
-import lombok.NoArgsConstructor;
-import org.labyrinthShiftChat.config.HibernateUtil;
-import org.labyrinthShiftChat.model.Level;
 import org.hibernate.Session;
+import org.labyrinthShiftChat.foundation.config.HibernateUtil;
+import org.labyrinthShiftChat.model.Level;
 
-@NoArgsConstructor
-public class LevelDAO {
+public class LevelDAO extends GenericDAO<Level> {
+
+    public LevelDAO() {
+        super(Level.class);
+    }
 
     public Level retrieveLevelByNumber(int levelNumber) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("FROM Level " +
-                            "WHERE levelIdentifier = :levelNumber ", Level.class)
+                            "WHERE levelIdentifier = :levelNumber", Level.class)
                     .setParameter("levelNumber", levelNumber)
                     .uniqueResult();
         }

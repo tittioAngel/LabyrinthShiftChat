@@ -8,7 +8,9 @@ import org.labyrinthShiftChat.model.tiles.common.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 import org.labyrinthShiftChat.util.TimerRaTMode;
-import org.labyrinthShiftChat.util.RotatingControls;
+import org.labyrinthShiftChat.util.controls.RandomRotationStrategy;
+import org.labyrinthShiftChat.util.controls.RotatingControls;
+import org.labyrinthShiftChat.util.controls.RotationStrategy;
 import org.labyrinthShiftChat.view.GamePlayView;
 import org.labyrinthShiftChat.view.ProfileView;
 import org.labyrinthShiftChat.view.RaTModeView;
@@ -27,6 +29,7 @@ public class RaTModeController {
     private final ProfileView profileView = new ProfileView();
     private final GamePlayView gamePlayView = new GamePlayView();
 
+    private final RotationStrategy randomRotationStrategy = new RandomRotationStrategy();
 
     public void startRATMode() throws InterruptedException {
 
@@ -84,8 +87,6 @@ public class RaTModeController {
     public int playGame(DifficultyLevel difficultyLevel) throws InterruptedException {
         int miniMazeCompleted = 0;
 
-        RotatingControls rotatingControls = new RotatingControls();
-
         raTModeView.print("\n🎮 Difficoltà selezionata: " + difficultyLevel);
         raTModeView.print("📜 Tempo totale disponibile: " + difficultyLevel.getRatTime() + " secondi");
 
@@ -99,14 +100,14 @@ public class RaTModeController {
             gameService.previewMaze();
             raTModeView.print("⏳ Previsualizzazione terminata! \nIl gioco inizia ora con la visione limitata!");
 
-            rotatingControls.rotateRandom();
+            randomRotationStrategy.rotateRandom();
 
             raTModeView.print("🧭 I comandi sono stati rimescolati! Occhio alla bussola!");
-            raTModeView.getMappedControlsInfo(rotatingControls);
+            raTModeView.getMappedControlsInfo((RandomRotationStrategy) randomRotationStrategy);
 
             timerRaTMode.resume();
 
-            boolean resolve = playLimitedView(timerRaTMode, difficultyLevel, rotatingControls);
+            boolean resolve = playLimitedView(timerRaTMode, difficultyLevel, (RandomRotationStrategy) randomRotationStrategy);
 
             if (resolve) {
                 timerRaTMode.pause();
@@ -120,12 +121,12 @@ public class RaTModeController {
 
         }
 
-        rotatingControls.resetRotation();
+        randomRotationStrategy.resetRotation();
 
         return miniMazeCompleted;
     }
 
-    public boolean playLimitedView(TimerRaTMode timerRaTMode, DifficultyLevel difficultyLevel, RotatingControls rotatingControls) {
+    public boolean playLimitedView(TimerRaTMode timerRaTMode, DifficultyLevel difficultyLevel, RandomRotationStrategy rotatingControls) {
 
         int totalMovements = difficultyLevel.getRatMovements();
 

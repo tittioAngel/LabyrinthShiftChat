@@ -1,20 +1,23 @@
-package org.labyrinthShiftChat.dao;
+package org.labyrinthShiftChat.foundation;
 
+import org.labyrinthShiftChat.foundation.config.HibernateUtil;
 import org.labyrinthShiftChat.model.GameSession;
-import org.labyrinthShiftChat.model.Player;
 import org.labyrinthShiftChat.model.Tile;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.labyrinthShiftChat.config.HibernateUtil;
 
-public class GameSessionDAO {
+public class GameSessionDAO extends GenericDAO<GameSession> {
 
+    public GameSessionDAO() {
+        super(GameSession.class);
+    }
+
+    @Override
     public void save(GameSession gameSession) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            // ✅ Salviamo la posizione del giocatore nella sessione
             Tile currentTile = gameSession.getCurrentTile();
             gameSession.setCurrentTile(currentTile);
 
@@ -26,23 +29,12 @@ public class GameSessionDAO {
         }
     }
 
-    public GameSession findById(Long id) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            GameSession gameSession = session.get(GameSession.class, id);
-            if (gameSession != null) {
-                // ✅ Ripristiniamo il giocatore nella sua posizione corrente
-                gameSession.setPlayer(new Player(gameSession.getCurrentTile().getX(), gameSession.getCurrentTile().getY()));
-            }
-            return gameSession;
-        }
-    }
-
+    @Override
     public void update(GameSession gameSession) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            // ✅ Aggiorniamo la posizione del giocatore nella sessione
             Tile currentTile = gameSession.getCurrentTile();
             gameSession.setCurrentTile(currentTile);
 

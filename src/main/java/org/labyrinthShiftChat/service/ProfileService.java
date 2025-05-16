@@ -1,7 +1,7 @@
 package org.labyrinthShiftChat.service;
 
 import lombok.NoArgsConstructor;
-import org.labyrinthShiftChat.dao.ProfileDAO;
+import org.labyrinthShiftChat.foundation.ProfileDAO;
 import org.labyrinthShiftChat.model.CompletedLevel;
 import org.labyrinthShiftChat.model.Profile;
 
@@ -22,7 +22,7 @@ public class ProfileService {
 
     public Profile createProfile(final String username,final String password) {
         Profile profile = new Profile(username, password);
-        if (!profileDAO.save(profile)) {
+        if (!profileDAO.saveWithDuplicateCheck(profile)) {
             return null;
         }
         return profile;

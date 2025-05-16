@@ -10,12 +10,10 @@ import org.labyrinthShiftChat.model.Profile;
 @Setter
 public class GameSessionManager {
 
-    private static final GameSessionManager instance = new GameSessionManager();
+    private static GameSessionManager instance;
 
     private Profile profile;
-
     private Level levelSelected;
-
     private GameSession gameSession;
 
     private GameSessionManager() {
@@ -25,6 +23,9 @@ public class GameSessionManager {
     }
 
     public static synchronized GameSessionManager getInstance() {
+        if (instance == null) {
+            instance = new GameSessionManager();
+        }
         return instance;
     }
 
@@ -44,5 +45,4 @@ public class GameSessionManager {
         levelSelected = null;
         gameSession = null;
     }
-
 }

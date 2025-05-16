@@ -1,8 +1,8 @@
 package org.labyrinthShiftChat.util;
 
-import org.labyrinthShiftChat.dao.MazeComponentDAO;
-import org.labyrinthShiftChat.dao.MazeDAO;
-import org.labyrinthShiftChat.dao.TileDAO;
+import org.labyrinthShiftChat.foundation.MazeComponentDAO;
+import org.labyrinthShiftChat.foundation.MazeDAO;
+import org.labyrinthShiftChat.foundation.TileDAO;
 import org.labyrinthShiftChat.model.*;
 import org.labyrinthShiftChat.model.tiles.MazeComponent;
 import org.labyrinthShiftChat.model.tiles.common.Corridor;

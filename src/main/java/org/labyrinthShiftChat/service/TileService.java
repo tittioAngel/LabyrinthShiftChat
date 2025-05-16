@@ -1,9 +1,8 @@
 package org.labyrinthShiftChat.service;
 
-import org.labyrinthShiftChat.dao.MazeComponentDAO;
-import org.labyrinthShiftChat.dao.GameSessionDAO;
-import org.labyrinthShiftChat.dao.TileDAO;
-import org.labyrinthShiftChat.model.GameSession;
+import org.labyrinthShiftChat.foundation.MazeComponentDAO;
+import org.labyrinthShiftChat.foundation.GameSessionDAO;
+import org.labyrinthShiftChat.foundation.TileDAO;
 import org.labyrinthShiftChat.model.Maze;
 import org.labyrinthShiftChat.model.Player;
 import org.labyrinthShiftChat.model.Tile;
@@ -13,7 +12,6 @@ import org.labyrinthShiftChat.singleton.GameSessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TileService {
 

@@ -1,6 +1,6 @@
 package org.labyrinthShiftChat.service;
 
-import org.labyrinthShiftChat.dao.*;
+import org.labyrinthShiftChat.foundation.*;
 import org.labyrinthShiftChat.model.*;
 import org.labyrinthShiftChat.model.tiles.common.Corridor;
 import org.labyrinthShiftChat.model.tiles.common.ExitTile;
@@ -143,7 +143,7 @@ public class MazeService {
                     break;
             }
 
-            mazeComponentDAO.merge(obstacleEntity);
+            mazeComponentDAO.mergeReplacingExisting(obstacleEntity);
             availableTiles.remove(randomTileIndex);
         }
 
@@ -166,7 +166,7 @@ public class MazeService {
                     break;
             }
 
-            mazeComponentDAO.merge(enemyEntity);
+            mazeComponentDAO.mergeReplacingExisting(enemyEntity);
             availableTiles.remove(randomTileIndex);
         }
 
@@ -189,7 +189,7 @@ public class MazeService {
                     break;
             }
 
-            mazeComponentDAO.merge(powerUpEntity);
+            mazeComponentDAO.mergeReplacingExisting(powerUpEntity);
             availableTiles.remove(randomTileIndex);
         }
     }

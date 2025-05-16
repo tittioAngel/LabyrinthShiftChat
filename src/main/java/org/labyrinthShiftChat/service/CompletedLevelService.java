@@ -1,7 +1,7 @@
 package org.labyrinthShiftChat.service;
 
 import lombok.NoArgsConstructor;
-import org.labyrinthShiftChat.dao.CompletedLevelDAO;
+import org.labyrinthShiftChat.foundation.CompletedLevelDAO;
 import org.labyrinthShiftChat.model.CompletedLevel;
 
 @NoArgsConstructor
