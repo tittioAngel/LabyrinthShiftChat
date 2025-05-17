@@ -47,7 +47,7 @@ public class MazeService {
         return mazeComponentDAO.findByTile(tile);
     }
 
-    private char[][] renderMazeView(Maze maze, Predicate<Tile> visibilityFilter) {
+    private char[][] renderMazeView(Maze maze, Predicate<Tile> visibilityFilter, boolean isLimitedView) {
         List<Tile> tiles = tileDAO.findAllTilesByMaze(maze.getId());
         int size = maze.getDifficulty().getMazeSize();
         char[][] grid = new char[size][size];
@@ -58,8 +58,14 @@ public class MazeService {
 
         for (Tile tile : tiles) {
             if (visibilityFilter.test(tile)) {
-                MazeComponent comp = mazeComponentDAO.findByTile(tile); // o da cache se ottimizzi
-                grid[tile.getX()][tile.getY()] = getSymbolForComponent(comp);
+                MazeComponent comp = mazeComponentDAO.findByTile(tile);
+                char symbol = getSymbolForComponent(comp);
+
+                if (isLimitedView && (symbol == 'N' || symbol == 'O' || symbol == 'P')) {
+                    grid[tile.getX()][tile.getY()] = getSymbolForComponent(new Corridor(tile));
+                } else {
+                    grid[tile.getX()][tile.getY()] = symbol;
+                }
             }
         }
 
@@ -68,11 +74,11 @@ public class MazeService {
 
 
     public char[][] displayMaze(Maze maze) {
-        return renderMazeView(maze, tile -> true);
+        return renderMazeView(maze, tile -> true, false);
     }
 
     public char[][] createLimitedView(Maze maze, int px, int py) {
-        char[][] grid = renderMazeView(maze, tile -> Math.abs(tile.getX()-px) <= 1 && Math.abs(tile.getY()-py) <= 1);
+        char[][] grid = renderMazeView(maze, tile -> Math.abs(tile.getX()-px) <= 1 && Math.abs(tile.getY()-py) <= 1, true);
         grid[px][py] = 'G';
         return grid;
     }
