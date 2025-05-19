@@ -3,7 +3,7 @@ package org.labyrinthShiftChat.util;
 public class TimerStoryMode {
 
     private final long startTime;
-    private long timeLimitMillis; // Rimosso 'final'
+    private long timeLimitMillis;
     private final double playerSpeed;
 
     public TimerStoryMode(long timeLimitMillis, double playerSpeed) {

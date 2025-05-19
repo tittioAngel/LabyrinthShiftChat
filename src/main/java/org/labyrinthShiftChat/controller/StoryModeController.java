@@ -10,6 +10,7 @@ import org.labyrinthShiftChat.util.controls.NoRotationStrategy;
 import org.labyrinthShiftChat.util.controls.Direction;
 import org.labyrinthShiftChat.util.TimerStoryMode;
 import org.labyrinthShiftChat.util.controls.RotationStrategy;
+import org.labyrinthShiftChat.util.scoring.ScoringService;
 import org.labyrinthShiftChat.view.GamePlayView;
 import org.labyrinthShiftChat.view.ProfileView;
 import org.labyrinthShiftChat.view.StoryModeView;
@@ -37,7 +38,6 @@ public class StoryModeController {
     private final RotationStrategy noRotationStrategy = new NoRotationStrategy();
 
     private static final int TOTAL_MINIMAZES = 3;
-    private static final long TIME_LIMIT_MILLIS = 60 * 1000;
 
     public void startStoryMode() throws InterruptedException {
 
@@ -48,15 +48,15 @@ public class StoryModeController {
             profileView.showProfileInfo(gameSessionManager.getProfile());
             storyModeView.showStoryModeMenu();
 
-            int input;
+            int choiceSelected;
             do {
-                input = storyModeView.readIntInput("👉 Scelta: ");
-                if (input < 1 || input > 4) {
+                choiceSelected = storyModeView.readIntInput("👉 Scelta: ");
+                if (choiceSelected < 1 || choiceSelected > 4) {
                     storyModeView.print("⚠️ Scelta non valida. Riprova.");
                 }
-            } while (input < 1 || input > 4);
+            } while (choiceSelected < 1 || choiceSelected > 4);
 
-            switch (input) {
+            switch (choiceSelected) {
                 case 1 -> {
                     levelSelected = gameSessionManager.getProfile().getCompletedLevels().size() + 1;
                     gameSessionManager.setLevelSelected(levelService.findLevelByNumber(levelSelected));
@@ -124,7 +124,7 @@ public class StoryModeController {
             gameService.previewMaze();
             storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
 
-            TimerStoryMode timer = new TimerStoryMode(TIME_LIMIT_MILLIS, gameSessionManager.getGameSession().getPlayer().getSpeed());
+            TimerStoryMode timer = new TimerStoryMode(levelSelected.getDifficultyLevel().getMaxTime() * 1000L, gameSessionManager.getGameSession().getPlayer().getSpeed());
             int stars = 0;
             boolean finished = false;
 
@@ -135,7 +135,7 @@ public class StoryModeController {
                     gamePlayView.print("\n🌀 Inizio Minimaze " + (miniMazeCompleted + 1) + " di " + TOTAL_MINIMAZES);
                     gameService.previewMaze();
                     storyModeView.print("⏳ Previsualizzazione terminata, il gioco sta per iniziare...");
-                    timer = new TimerStoryMode(TIME_LIMIT_MILLIS, gameSessionManager.getGameSession().getPlayer().getSpeed());
+                    timer = new TimerStoryMode(levelSelected.getDifficultyLevel().getMaxTime() * 1000L, gameSessionManager.getGameSession().getPlayer().getSpeed());
                 } else if (stars != 0) {
                     finished = true;
                 }
@@ -189,7 +189,7 @@ public class StoryModeController {
             if (newTile != null) {
                 MazeComponent mazeComponent = mazeService.findMazeComponentByTile(newTile);
                 if (mazeComponent instanceof ExitTile) {
-                    return scoringService.computeStars(timer.getTotalTimeSeconds());
+                    return scoringService.computeStars(gameSessionManager.getLevelSelected().getDifficultyLevel(), timer.getTotalTimeSeconds());
                 } else {
                     tileService.checkTileEffects();
 

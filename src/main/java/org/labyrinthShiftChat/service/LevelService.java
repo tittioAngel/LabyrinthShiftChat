@@ -13,9 +13,4 @@ public class LevelService {
         return levelDAO.retrieveLevelByNumber(number);
     }
 
-    public void playLevel(int levelNumber) {
-        Level level = levelDAO.retrieveLevelByNumber(levelNumber);
-
-    }
-
 }
