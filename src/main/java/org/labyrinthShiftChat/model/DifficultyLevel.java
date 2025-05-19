@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum DifficultyLevel {
-    EASY("EASY", 7, 1, 1, 1, 7, 60, 16),
-    MEDIUM("MEDIUM", 9, 3, 2, 2, 10, 80, 22),
-    HARD("HARD", 11, 3, 3, 3, 13, 100, 28),
-    EXTREME("EXTREME", 13, 4, 3, 4, 16, 120, 34);
+    EASY("EASY", 7, 1, 1, 1, 7, 60, 20),
+    MEDIUM("MEDIUM", 9, 3, 2, 2, 10, 80, 30),
+    HARD("HARD", 11, 3, 3, 3, 13, 100, 45),
+    EXTREME("EXTREME", 13, 4, 3, 4, 16, 120, 65);
 
     private final String difficultyName;
     private final int mazeSize;

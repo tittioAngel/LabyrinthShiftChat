@@ -9,7 +9,7 @@ import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 import org.labyrinthShiftChat.util.TimerRaTMode;
 import org.labyrinthShiftChat.util.controls.RandomRotationStrategy;
-import org.labyrinthShiftChat.util.controls.RotatingControls;
+import org.labyrinthShiftChat.util.controls.Direction;
 import org.labyrinthShiftChat.util.controls.RotationStrategy;
 import org.labyrinthShiftChat.view.GamePlayView;
 import org.labyrinthShiftChat.view.ProfileView;
@@ -146,14 +146,14 @@ public class RaTModeController {
 
             totalMovements --;
 
-            RotatingControls.Direction inputDir = RotatingControls.convertInputToDirection(direction);
+            Direction inputDir = Direction.convertInputToDirection(direction);
 
             if (inputDir == null) {
                 gamePlayView.print("❌ Input non valido.");
                 continue;
             }
 
-            RotatingControls.Direction actualDir = rotatingControls.mapInput(inputDir);
+            Direction actualDir = rotatingControls.mapInput(inputDir);
             gamePlayView.print("🔄 Input '" + direction + "' mappato su direzione effettiva: " + actualDir);
 
             Tile newTile = playerService.movePlayerOnNewTile(actualDir);
@@ -168,6 +168,7 @@ public class RaTModeController {
                     if (gameSessionManager.getGameSession().getPlayer().isShowAllMaze()) {
                         timerRaTMode.pause();
                         gameService.previewMaze();
+                        gameSessionManager.getGameSession().getPlayer().setShowAllMaze(false);
                         timerRaTMode.resume();
                     }
                 }

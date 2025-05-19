@@ -1,6 +1,6 @@
 package org.labyrinthShiftChat.util.controls;
 
-import org.labyrinthShiftChat.util.controls.RotatingControls.Direction;
+import org.labyrinthShiftChat.util.controls.Direction;
 
 public interface RotationStrategy {
 

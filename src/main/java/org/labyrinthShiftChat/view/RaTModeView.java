@@ -2,7 +2,7 @@ package org.labyrinthShiftChat.view;
 
 import org.labyrinthShiftChat.model.DifficultyLevel;
 import org.labyrinthShiftChat.util.controls.RandomRotationStrategy;
-import org.labyrinthShiftChat.util.controls.RotatingControls;
+import org.labyrinthShiftChat.util.controls.Direction;
 
 public class RaTModeView extends BaseView{
 
@@ -32,10 +32,10 @@ public class RaTModeView extends BaseView{
 
     public void getMappedControlsInfo(RandomRotationStrategy controls) {
          System.out.println("\n🔁 Mappatura comandi attuale:\n" +
-                "  W ➡️ " + controls.mapInput(RotatingControls.Direction.UP) + "\n" +
-                "  A ➡️ " + controls.mapInput(RotatingControls.Direction.LEFT) + "\n" +
-                "  S ➡️ " + controls.mapInput(RotatingControls.Direction.DOWN) + "\n" +
-                "  D ➡️ " + controls.mapInput(RotatingControls.Direction.RIGHT));
+                "  W ➡️ " + controls.mapInput(Direction.UP) + "\n" +
+                "  A ➡️ " + controls.mapInput(Direction.LEFT) + "\n" +
+                "  S ➡️ " + controls.mapInput(Direction.DOWN) + "\n" +
+                "  D ➡️ " + controls.mapInput(Direction.RIGHT));
     }
 
     public void showDifficultyGame(){

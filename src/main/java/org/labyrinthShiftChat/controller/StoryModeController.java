@@ -7,7 +7,7 @@ import org.labyrinthShiftChat.model.tiles.common.ExitTile;
 import org.labyrinthShiftChat.service.*;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
 import org.labyrinthShiftChat.util.controls.NoRotationStrategy;
-import org.labyrinthShiftChat.util.controls.RotatingControls;
+import org.labyrinthShiftChat.util.controls.Direction;
 import org.labyrinthShiftChat.util.TimerStoryMode;
 import org.labyrinthShiftChat.util.controls.RotationStrategy;
 import org.labyrinthShiftChat.view.GamePlayView;
@@ -178,12 +178,12 @@ public class StoryModeController {
             return 0;
         }
 
-        RotatingControls.Direction inputDir = RotatingControls.convertInputToDirection(direction);
-        RotatingControls.Direction mappedDir = noRotationStrategy.mapInput(inputDir);
+        Direction inputDir = Direction.convertInputToDirection(direction);
+        Direction mappedDir = noRotationStrategy.mapInput(inputDir);
         return manageDirectionSelected(mappedDir, timer);
     }
 
-    public int manageDirectionSelected(RotatingControls.Direction direction, TimerStoryMode timer) {
+    public int manageDirectionSelected(Direction direction, TimerStoryMode timer) {
         if (direction != null) {
             Tile newTile = playerService.movePlayerOnNewTile(direction);
             if (newTile != null) {
@@ -195,6 +195,7 @@ public class StoryModeController {
 
                     if (gameSessionManager.getGameSession().getPlayer().isShowAllMaze()) {
                         gameService.previewMaze();
+                        gameSessionManager.getGameSession().getPlayer().setShowAllMaze(false);
                         timer.addTimeSeconds(gameSessionManager.getGameSession().getMaze().getDifficulty().getPreviewTime());
                     }
                 }

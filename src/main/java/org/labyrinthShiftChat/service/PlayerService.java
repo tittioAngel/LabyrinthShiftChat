@@ -10,7 +10,7 @@ import org.labyrinthShiftChat.model.Tile;
 import org.labyrinthShiftChat.model.tiles.MazeComponent;
 import org.labyrinthShiftChat.model.tiles.common.Wall;
 import org.labyrinthShiftChat.singleton.GameSessionManager;
-import org.labyrinthShiftChat.util.controls.RotatingControls;
+import org.labyrinthShiftChat.util.controls.Direction;
 
 public class PlayerService {
 
@@ -20,7 +20,7 @@ public class PlayerService {
     private final MazeComponentDAO mazeComponentDAO = new MazeComponentDAO();
     private final GameSessionDAO gameSessionDAO = new GameSessionDAO();
 
-    public Tile movePlayerOnNewTile(RotatingControls.Direction direction) {
+    public Tile movePlayerOnNewTile(Direction direction) {
         GameSession gameSession = gameSessionManager.getGameSession();
         Player player = gameSession.getPlayer();
 

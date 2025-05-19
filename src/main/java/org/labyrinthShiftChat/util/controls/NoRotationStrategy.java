@@ -1,7 +1,5 @@
 package org.labyrinthShiftChat.util.controls;
 
-import org.labyrinthShiftChat.util.controls.RotatingControls.Direction;
-
 public class NoRotationStrategy implements RotationStrategy {
 
     @Override
