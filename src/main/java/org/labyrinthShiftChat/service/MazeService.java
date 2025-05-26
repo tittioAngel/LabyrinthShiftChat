@@ -126,7 +126,7 @@ public class MazeService {
     public char[][] createPreviewMiniMaze(Maze maze) {
         System.out.println("🔍 Visualizzazione completa del labirinto per " + maze.getDifficulty().getPreviewTime() + " secondi:");
 
-         return displayMaze(maze);
+        return displayMaze(maze);
 
     }
 
